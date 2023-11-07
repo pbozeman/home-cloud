@@ -1,3 +1,15 @@
+variable "domain_name" {
+  type = string
+}
+
+variable "cloudflare_api_token" {
+  type = string
+}
+
+variable "cloudflare_zone_id" {
+  type = string
+}
+
 variable "unifi_username" {
   type = string
 }
@@ -39,6 +51,10 @@ variable "guest_ssid" {
 }
 
 variable "guest_passphrase" {
+  type = string
+}
+
+variable "cloudkey_01_ip" {
   type = string
 }
 

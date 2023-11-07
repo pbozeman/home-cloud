@@ -4,15 +4,6 @@
 #   ipv6 off
 #   multicast dns on
 
-terraform {
-  required_providers {
-    unifi = {
-      source  = "paultyng/unifi"
-      version = "0.41.0"
-    }
-  }
-}
-
 provider "unifi" {
   username = var.unifi_username
   password = var.unifi_password
@@ -42,7 +33,7 @@ resource "unifi_network" "lan" {
   dhcp_enabled  = true
   dhcp_start    = "192.168.10.100"
   dhcp_stop     = "192.168.10.254"
-  domain_name   = "localdomain"
+  domain_name   = var.domain_name
   multicast_dns = true
 
   # I'm not using ipv6, but unifi keeps inserting these back into the config
@@ -65,7 +56,7 @@ resource "unifi_network" "clients" {
   dhcp_enabled  = true
   dhcp_start    = "192.168.20.100"
   dhcp_stop     = "192.168.20.254"
-  domain_name   = "localdomain"
+  domain_name   = var.domain_name
   multicast_dns = true
 }
 
@@ -77,7 +68,7 @@ resource "unifi_network" "kids" {
   dhcp_enabled  = true
   dhcp_start    = "192.168.30.100"
   dhcp_stop     = "192.168.30.254"
-  domain_name   = "localdomain"
+  domain_name   = var.domain_name
   multicast_dns = true
 }
 
@@ -89,7 +80,7 @@ resource "unifi_network" "iot" {
   dhcp_enabled  = true
   dhcp_start    = "192.168.40.100"
   dhcp_stop     = "192.168.40.254"
-  domain_name   = "localdomain"
+  domain_name   = var.domain_name
   multicast_dns = true
 }
 
@@ -101,7 +92,7 @@ resource "unifi_network" "guest" {
   dhcp_enabled  = true
   dhcp_start    = "192.168.50.100"
   dhcp_stop     = "192.168.50.254"
-  domain_name   = "localdomain"
+  domain_name   = var.domain_name
   multicast_dns = true
 }
 
