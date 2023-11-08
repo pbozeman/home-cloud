@@ -3,6 +3,7 @@
 #   wireless meshing off
 #   ipv6 off
 #   multicast dns on
+#   kids network content filtering on
 
 provider "unifi" {
   username = var.unifi_username
@@ -70,6 +71,7 @@ resource "unifi_network" "kids" {
   dhcp_stop     = "192.168.30.254"
   domain_name   = var.domain_name
   multicast_dns = true
+  dhcp_dns      = ["1.1.1.3", "1.0.0.3"]
 }
 
 resource "unifi_network" "iot" {
