@@ -61,3 +61,27 @@ variable "cloudkey_01_ip" {
 variable "local_dns_ip" {
   type = string
 }
+
+variable "pve_01_ip" {
+  type = string
+}
+
+variable "proxmox_endpoint" {
+  type = string
+}
+
+variable "proxmox_username" {
+  type = string
+}
+
+variable "proxmox_password" {
+  type = string
+}
+
+variable "ubuntu_username" {
+  type = string
+}
+
+variable "ubuntu_password" {
+  type = string
+}
