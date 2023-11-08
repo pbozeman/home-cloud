@@ -59,6 +59,7 @@ resource "unifi_network" "clients" {
   dhcp_stop     = "192.168.20.254"
   domain_name   = var.domain_name
   multicast_dns = true
+  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
 }
 
 resource "unifi_network" "kids" {
@@ -84,6 +85,7 @@ resource "unifi_network" "iot" {
   dhcp_stop     = "192.168.40.254"
   domain_name   = var.domain_name
   multicast_dns = true
+  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
 }
 
 resource "unifi_network" "guest" {
@@ -96,6 +98,7 @@ resource "unifi_network" "guest" {
   dhcp_stop     = "192.168.50.254"
   domain_name   = var.domain_name
   multicast_dns = true
+  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
 }
 
 resource "unifi_wlan" "clients" {
