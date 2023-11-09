@@ -1,4 +1,12 @@
 terraform {
+  backend "remote" {
+    organization = "bozeman"
+
+    workspaces {
+      name = "home-network"
+    }
+  }
+
   required_providers {
     cloudflare = {
       source  = "cloudflare/cloudflare"
