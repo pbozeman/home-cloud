@@ -1,4 +1,5 @@
-# manually set/verrified:
+# manually set/verified:
+#   create terraform user
 #   site wide led off
 #   wireless meshing off
 #   ipv6 off
