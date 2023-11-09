@@ -71,6 +71,11 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     enabled = true
   }
 
+  cpu {
+    # needed for nested virtualization
+    type = "host"
+  }
+
   disk {
     datastore_id = "local-lvm"
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
@@ -128,6 +133,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_dev" {
   }
 
   cpu {
+    type  = "host"
     cores = 4
   }
 
