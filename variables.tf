@@ -1,3 +1,7 @@
+variable "ssh_pubkeys" {
+  type = list(string)
+}
+
 variable "domain_name" {
   type = string
 }

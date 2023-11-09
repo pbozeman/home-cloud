@@ -83,6 +83,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     user_account {
       username = var.ubuntu_username
       password = var.ubuntu_password
+      keys     = var.ssh_pubkeys
     }
 
     ip_config {
