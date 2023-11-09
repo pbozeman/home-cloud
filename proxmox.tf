@@ -116,6 +116,25 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
   }
 }
 
+resource "proxmox_virtual_environment_vm" "ubuntu_dev" {
+  node_name = "pve-01"
+  name      = "ubuntu-dev"
+  on_boot   = true
+  started   = true
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.ubuntu_vm_template.vm_id
+  }
+
+  cpu {
+    cores = 4
+  }
+
+  memory {
+    dedicated = 8192
+  }
+}
+
 data "proxmox_virtual_environment_dns" "pve_01" {
   node_name = "pve-01"
 }
