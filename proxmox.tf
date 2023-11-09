@@ -45,8 +45,9 @@ resource "proxmox_virtual_environment_file" "cloud_config_vendor" {
         - qemu-guest-agent
     EOF
 
-    # the teraform provider docs give a yaml file as an exaple.
-    # proxmox is actually quite picky.  This must end in ".yml"
+    # The teraform provider docs give a yaml file as an example.
+    # However, Proxmox is actually quite picky and "yaml" doesn't work.
+    # This must end in ".yml"
     file_name = "cloud-config-vendor.yml"
   }
 }
