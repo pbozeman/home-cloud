@@ -75,6 +75,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     datastore_id = "local-lvm"
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "virtio0"
+    size         = 64
   }
 
   initialization {
