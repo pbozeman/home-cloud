@@ -52,11 +52,6 @@ resource "proxmox_virtual_environment_file" "cloud_config_vendor" {
   }
 }
 
-resource "tls_private_key" "ubuntu_vm_key" {
-  algorithm = "RSA"
-  rsa_bits  = 2048
-}
-
 # the disk for bpg/terraform templated vms do not get converted to "base" disks
 # and can't be used as the base of a linked clone.
 resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
