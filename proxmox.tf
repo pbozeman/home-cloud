@@ -121,9 +121,11 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
 
 resource "proxmox_virtual_environment_vm" "ubuntu_dev" {
   node_name = "pve-01"
-  name      = "ubuntu-dev"
-  on_boot   = false
-  started   = false
+  vm_id     = 8000
+
+  name    = "ubuntu-dev"
+  on_boot = false
+  started = false
 
   clone {
     vm_id = proxmox_virtual_environment_vm.ubuntu_vm_template.vm_id
