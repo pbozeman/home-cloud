@@ -167,7 +167,7 @@ resource "terraform_data" "nixos_pve_restored" {
       password = var.proxmox_password
       host     = var.pve_01_ip
     }
-    inline = ["qm create 9001 --force true --template true --name nixos-pve --archive /var/lib/vz/dump/vzdump-qemu-nixos-23.11.20230825.5690c42.vma.zst"]
+    inline = ["qm create 9001 --force true --template true --name nixos-pve-template --archive /var/lib/vz/dump/vzdump-qemu-nixos-23.11.20230825.5690c42.vma.zst"]
   }
 }
 
