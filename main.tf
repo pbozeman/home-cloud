@@ -16,6 +16,10 @@ terraform {
       source  = "bpg/proxmox"
       version = "0.37.0"
     }
+    remote = {
+      source  = "tenstad/remote"
+      version = "0.1.2"
+    }
     unifi = {
       source  = "paultyng/unifi"
       version = "0.41.0"

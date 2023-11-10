@@ -76,6 +76,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     datastore_id = "local-lvm"
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "virtio0"
+    iothread     = true
     size         = 64
   }
 
@@ -142,6 +143,77 @@ resource "proxmox_virtual_environment_vm" "ubuntu_dev" {
       started
     ]
   }
+}
+
+resource "terraform_data" "nixos_pve_restored" {
+  provisioner "file" {
+    source      = "/nix/store/7byrjn28mcynk55xv0zwpw95a70ay6x2-proxmox-nixos-23.11.20230825.5690c42/vzdump-qemu-nixos-23.11.20230825.5690c42.vma.zst"
+    destination = "/var/lib/vz/dump/vzdump-qemu-nixos-23.11.20230825.5690c42.vma.zst"
+
+    connection {
+      type     = "ssh"
+      host     = var.pve_01_ip
+      user     = "root"
+      password = var.proxmox_password
+    }
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = var.proxmox_password
+      host     = var.pve_01_ip
+    }
+    inline = ["qm create 9001 --force true --template true --name nixos-pve --archive /var/lib/vz/dump/vzdump-qemu-nixos-23.11.20230825.5690c42.vma.zst"]
+  }
+}
+
+resource "proxmox_virtual_environment_vm" "nixos_pve" {
+  node_name = "pve-01"
+  vm_id     = 8001
+
+  name    = "nixos-pve"
+  on_boot = true
+  started = true
+
+  clone {
+    vm_id = 9001
+  }
+
+  agent {
+    enabled = true
+  }
+
+  memory {
+    dedicated = 16384
+  }
+
+  cpu {
+    # needed for nested virtualization
+    type  = "host"
+    cores = 6
+  }
+
+  disk {
+    datastore_id = "local-lvm"
+    interface    = "virtio0"
+    iothread     = true
+    size         = 64
+  }
+
+  # packages and users are managed inside nix
+  initialization {
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
+  }
+
+  depends_on = [
+    terraform_data.nixos_pve_restored
+  ]
 }
 
 data "proxmox_virtual_environment_dns" "pve_01" {
