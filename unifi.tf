@@ -1,5 +1,6 @@
 # manually set/verified:
 #   create terraform user
+#   terraform import unifi_network.lan name=Default
 #   site wide led off
 #   wireless meshing off
 #   ipv6 off
@@ -37,6 +38,8 @@ data "unifi_ap_group" "default" {
 data "unifi_user_group" "default" {
 }
 
+# Note: the default network already exist and so it must be imported with
+#   terraform import unifi_network.lan name=Default
 resource "unifi_network" "lan" {
   # Leave the name as Default.
   #
