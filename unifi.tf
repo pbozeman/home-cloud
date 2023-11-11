@@ -15,6 +15,22 @@ provider "unifi" {
   allow_insecure = true
 }
 
+locals {
+  vlans = {
+    "Trusted" = { vlan_id = 20, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Kids"    = { vlan_id = 30, dhcp_dns = ["1.1.1.3", "1.0.0.3"] },
+    "IoT"     = { vlan_id = 40, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Guest"   = { vlan_id = 50, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+  }
+
+  wlans = {
+    (var.clients_ssid) = { network = "Trusted", passphrase = var.clients_passphrase },
+    (var.kids_ssid)    = { network = "Kids", passphrase = var.kids_passphrase },
+    (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
+    (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase },
+  }
+}
+
 data "unifi_ap_group" "default" {
 }
 
@@ -50,107 +66,35 @@ resource "unifi_network" "lan" {
   wan_type_v6       = "disabled"
 }
 
-resource "unifi_network" "clients" {
-  name          = "Clients"
+resource "unifi_network" "network" {
+  for_each = local.vlans
+  name     = each.key
+
   purpose       = "corporate"
-  vlan_id       = 20
-  subnet        = "192.168.20.0/24"
+  vlan_id       = each.value.vlan_id
+  subnet        = "192.168.${each.value.vlan_id}.0/24"
   dhcp_enabled  = true
-  dhcp_start    = "192.168.20.100"
-  dhcp_stop     = "192.168.20.254"
+  dhcp_start    = "192.168.${each.value.vlan_id}.100"
+  dhcp_stop     = "192.168.${each.value.vlan_id}.254"
   domain_name   = var.domain_name
   multicast_dns = true
-  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
+  dhcp_dns      = each.value.dhcp_dns
+
+  dhcp_v6_start     = "::2"
+  dhcp_v6_stop      = "::7d1"
+  ipv6_pd_interface = "wan"
+  ipv6_pd_start     = "::2"
+  ipv6_pd_stop      = "::7d1"
+  ipv6_ra_priority  = "high"
+  wan_type_v6       = "disabled"
 }
 
-resource "unifi_network" "kids" {
-  name          = "Kids"
-  purpose       = "corporate"
-  vlan_id       = 30
-  subnet        = "192.168.30.0/24"
-  dhcp_enabled  = true
-  dhcp_start    = "192.168.30.100"
-  dhcp_stop     = "192.168.30.254"
-  domain_name   = var.domain_name
-  multicast_dns = true
-  dhcp_dns      = ["1.1.1.3", "1.0.0.3"]
-}
+resource "unifi_wlan" "wlan" {
+  for_each = local.wlans
+  name     = each.key
 
-resource "unifi_network" "iot" {
-  name          = "IoT"
-  purpose       = "corporate"
-  vlan_id       = 40
-  subnet        = "192.168.40.0/24"
-  dhcp_enabled  = true
-  dhcp_start    = "192.168.40.100"
-  dhcp_stop     = "192.168.40.254"
-  domain_name   = var.domain_name
-  multicast_dns = true
-  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
-}
-
-resource "unifi_network" "guest" {
-  name          = "Guest"
-  purpose       = "corporate"
-  vlan_id       = 50
-  subnet        = "192.168.50.0/24"
-  dhcp_enabled  = true
-  dhcp_start    = "192.168.50.100"
-  dhcp_stop     = "192.168.50.254"
-  domain_name   = var.domain_name
-  multicast_dns = true
-  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
-}
-
-resource "unifi_wlan" "clients" {
-  name       = var.clients_ssid
-  passphrase = var.clients_passphrase
-  network_id = unifi_network.clients.id
-  security   = "wpapsk"
-
-  # enable WPA2/WPA3 support
-  wpa3_support    = true
-  wpa3_transition = true
-  pmf_mode        = "optional"
-
-  ap_group_ids  = [data.unifi_ap_group.default.id]
-  user_group_id = data.unifi_user_group.default.id
-}
-
-resource "unifi_wlan" "guest" {
-  name       = var.guest_ssid
-  passphrase = var.guest_passphrase
-  network_id = unifi_network.guest.id
-  security   = "wpapsk"
-
-  # enable WPA2/WPA3 support
-  wpa3_support    = true
-  wpa3_transition = true
-  pmf_mode        = "optional"
-
-  ap_group_ids  = [data.unifi_ap_group.default.id]
-  user_group_id = data.unifi_user_group.default.id
-}
-
-resource "unifi_wlan" "iot" {
-  name       = var.iot_ssid
-  passphrase = var.iot_passphrase
-  network_id = unifi_network.iot.id
-  security   = "wpapsk"
-
-  # enable WPA2/WPA3 support
-  wpa3_support    = true
-  wpa3_transition = true
-  pmf_mode        = "optional"
-
-  ap_group_ids  = [data.unifi_ap_group.default.id]
-  user_group_id = data.unifi_user_group.default.id
-}
-
-resource "unifi_wlan" "kids" {
-  name       = var.kids_ssid
-  passphrase = var.kids_passphrase
-  network_id = unifi_network.kids.id
+  passphrase = each.value.passphrase
+  network_id = unifi_network.network[each.value.network].id
   security   = "wpapsk"
 
   # enable WPA2/WPA3 support
@@ -212,24 +156,24 @@ resource "unifi_firewall_rule" "allow_lan_to_vlans" {
   dst_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
 }
 
-resource "unifi_firewall_rule" "allow_clients_to_lan" {
+resource "unifi_firewall_rule" "allow_trusted_to_lan" {
   action      = "accept"
-  name        = "allow Clients to LAN"
+  name        = "allow Trusted to LAN"
   rule_index  = 2003
   ruleset     = "LAN_IN"
   protocol    = "all"
-  src_address = unifi_network.clients.subnet
+  src_address = unifi_network.network["Trusted"].subnet
   dst_address = unifi_network.lan.subnet
 }
 
-resource "unifi_firewall_rule" "allow_clients_to_iot" {
+resource "unifi_firewall_rule" "allow_trusted_to_iot" {
   action      = "accept"
-  name        = "allow Clients to IoT"
+  name        = "allow Trusted to IoT"
   rule_index  = 2004
   ruleset     = "LAN_IN"
   protocol    = "all"
-  src_address = unifi_network.clients.subnet
-  dst_address = unifi_network.iot.subnet
+  src_address = unifi_network.network["Trusted"].subnet
+  dst_address = unifi_network.network["IoT"].subnet
 }
 
 resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
