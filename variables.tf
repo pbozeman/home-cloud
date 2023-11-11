@@ -66,6 +66,10 @@ variable "local_dns_ip" {
   type = string
 }
 
+variable "pve_01_mac" {
+  type = string
+}
+
 variable "pve_01_ip" {
   type = string
 }

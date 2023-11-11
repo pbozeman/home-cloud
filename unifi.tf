@@ -185,3 +185,10 @@ resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
   dst_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
 }
+
+resource "unifi_user" "pve_01" {
+  mac        = var.pve_01_mac
+  fixed_ip   = var.pve_01_ip
+  name       = "pve-01"
+  network_id = unifi_network.lan.id
+}
