@@ -156,9 +156,10 @@ resource "null_resource" "build_dir" {
 resource "null_resource" "local_nixos_vma" {
   provisioner "local-exec" {
     command = <<EOF
+      set -e
       mkdir -p .build/nixos-template
       cd .build/nixos-template
-      nix build ../../nixos-template#proxmox-template
+      nix build ../../nixos-template#packages.x86_64-linux.proxmox-template
       cat result/nix-support/hydra-build-products | cut -f 3 -d' ' > vma_path
     EOF
   }
@@ -175,12 +176,12 @@ resource "null_resource" "local_nixos_vma" {
 
 data "local_file" "nixos_vma" {
   filename = ".build/nixos-template/vma_path"
-
-  depends_on = [
-    null_resource.local_nixos_vma
-  ]
 }
 
+# this was carefully crafted to not trigger on the contents of the nixos_vma
+# local file, and only to trigger on the nix config. This enables a terraform
+# to occur on a machine capable of getting building the vma, but later
+# work on downstream resources to occur on machines that can't (e.g. darwin)
 resource "null_resource" "proxmox_nixos_vma" {
   provisioner "file" {
     source      = trimspace(data.local_file.nixos_vma.content)
@@ -194,8 +195,13 @@ resource "null_resource" "proxmox_nixos_vma" {
     }
   }
 
+  depends_on = [
+    null_resource.local_nixos_vma
+  ]
+
   triggers = {
-    local_vma_id = data.local_file.nixos_vma.id
+    nix    = "${sha1(file("nixos-template/flake.nix"))}"
+    config = "${sha1(file("nixos-template/configuration.nix"))}"
   }
 }
 
@@ -252,7 +258,7 @@ resource "proxmox_virtual_environment_vm" "nixos_template" {
   disk {
     datastore_id = "local-lvm"
     interface    = "virtio0"
-    iothread     = false
+    iothread     = true
     size         = 16
   }
 
@@ -332,7 +338,6 @@ resource "proxmox_virtual_environment_vm" "nixos_pve" {
     size         = 64
   }
 
-  # packages and users are managed inside nix
   initialization {
     ip_config {
       ipv4 {
@@ -344,6 +349,69 @@ resource "proxmox_virtual_environment_vm" "nixos_pve" {
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "proxmox_virtual_environment_vm" "k3s" {
+  node_name = "pve-01"
+
+  name    = "k3s-01"
+  on_boot = true
+  started = true
+
+  clone {
+    vm_id = proxmox_virtual_environment_vm.nixos_template.vm_id
+  }
+
+  agent {
+    enabled = true
+  }
+
+  memory {
+    dedicated = 8192
+  }
+
+  cpu {
+    type  = "host"
+    cores = 4
+  }
+
+  disk {
+    datastore_id = "local-lvm"
+    interface    = "virtio0"
+    iothread     = true
+    size         = 64
+  }
+
+  initialization {
+    user_account {
+      username = "nixos"
+      password = random_password.nixos_password.result
+      keys     = var.ssh_pubkeys
+    }
+
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+      }
+    }
+  }
+}
+
+module "nixos-terraform" {
+  source = "github.com/Gabriella439/terraform-nixos-ng/nixos"
+
+  host = "root@${proxmox_virtual_environment_vm.k3s.name}"
+
+  flake = "./nixos-k3s#default"
+
+  arguments = [
+    # You can build on another machine, including the target machine, by
+    # enabling this option, but if you build on the target machine then make
+    # sure that the firewall and security group permit outbound connections.
+    "--build-host", "root@${proxmox_virtual_environment_vm.k3s.name}"
+  ]
+
+  ssh_options = "-o StrictHostKeyChecking=accept-new"
 }
 
 data "proxmox_virtual_environment_dns" "pve_01" {
