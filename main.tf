@@ -12,6 +12,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 4"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "3.2.1"
+    }
     proxmox = {
       source  = "bpg/proxmox"
       version = "0.37.0"
