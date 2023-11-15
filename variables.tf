@@ -26,11 +26,11 @@ variable "unifi_api_url" {
   type = string
 }
 
-variable "clients_ssid" {
+variable "trusted_ssid" {
   type = string
 }
 
-variable "clients_passphrase" {
+variable "trusted_passphrase" {
   type = string
 }
 
@@ -66,12 +66,19 @@ variable "local_dns_ip" {
   type = string
 }
 
-variable "pve_01_mac" {
-  type = string
+variable "pve_nodes" {
+  type = map(object({
+    ip  = string
+    mac = string
+  }))
 }
 
-variable "pve_01_ip" {
-  type = string
+variable "nixos_vms" {
+  type = map(object({
+    pve_node = string
+    ip       = string
+    gateway  = string
+  }))
 }
 
 variable "proxmox_endpoint" {
@@ -86,10 +93,26 @@ variable "proxmox_password" {
   type = string
 }
 
+variable "proxmox_ssh_privkey" {
+  type = string
+}
+
+variable "proxmox_ssh_pubkey" {
+  type = string
+}
+
 variable "ubuntu_username" {
   type = string
 }
 
 variable "ubuntu_password" {
+  type = string
+}
+
+variable "nixos_username" {
+  type = string
+}
+
+variable "nixos_password" {
   type = string
 }

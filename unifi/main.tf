@@ -7,25 +7,26 @@
 #   multicast dns on
 #   kids network content filtering on
 
-provider "unifi" {
-  username = var.unifi_username
-  password = var.unifi_password
-  api_url  = var.unifi_api_url
 
-  # FIXME: install certs
-  allow_insecure = true
+terraform {
+  required_providers {
+    unifi = {
+      source  = "paultyng/unifi"
+      version = "0.41.0"
+    }
+  }
 }
 
 locals {
   vlans = {
-    "Trusted" = { vlan_id = 20, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
-    "Kids"    = { vlan_id = 30, dhcp_dns = ["1.1.1.3", "1.0.0.3"] },
-    "IoT"     = { vlan_id = 40, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
-    "Guest"   = { vlan_id = 50, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Trusted" = { vlan_id = var.trusted_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Kids"    = { vlan_id = var.kids_vlan, dhcp_dns = ["1.1.1.3", "1.0.0.3"] },
+    "IoT"     = { vlan_id = var.iot_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Guest"   = { vlan_id = var.guest_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
   }
 
   wlans = {
-    (var.clients_ssid) = { network = "Trusted", passphrase = var.clients_passphrase },
+    (var.trusted_ssid) = { network = "Trusted", passphrase = var.trusted_passphrase },
     (var.kids_ssid)    = { network = "Kids", passphrase = var.kids_passphrase },
     (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
     (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase },
@@ -39,7 +40,7 @@ data "unifi_user_group" "default" {
 }
 
 # Note: the default network already exist and so it must be imported with
-#   terraform import unifi_network.lan name=Default
+#   terraform import module.unifi.unifi_network.lan name=Default
 resource "unifi_network" "lan" {
   # Leave the name as Default.
   #
@@ -56,6 +57,7 @@ resource "unifi_network" "lan" {
   dhcp_stop     = "192.168.10.254"
   domain_name   = var.domain_name
   multicast_dns = true
+  dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
 
   # I'm not using ipv6, but unifi keeps inserting these back into the config
   # for the default network. Add them explicitly so that the terraform diff
@@ -187,11 +189,4 @@ resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
   dst_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
-}
-
-resource "unifi_user" "pve_01" {
-  mac        = var.pve_01_mac
-  fixed_ip   = var.pve_01_ip
-  name       = "pve-01"
-  network_id = unifi_network.lan.id
 }
