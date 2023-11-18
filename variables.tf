@@ -86,12 +86,13 @@ variable "nixos_dev_vms" {
 
 variable "nixos_k3s_vms" {
   type = map(object({
-    pve_node = string
-    ip       = string
-    gateway  = string
-    cores    = number
-    memory   = number
-    username = string
+    pve_node     = string
+    ip           = string
+    gateway      = string
+    cores        = number
+    memory       = number
+    username     = string
+    cluster_init = bool
   }))
 }
 

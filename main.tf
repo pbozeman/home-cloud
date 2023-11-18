@@ -86,6 +86,9 @@ module "vms" {
 }
 
 module "k3s" {
-  source         = "./modules/k3s"
+  source = "./modules/k3s"
+
   vms_dependency = module.vms.done
+
+  k3s_nodes = var.nixos_k3s_vms
 }
