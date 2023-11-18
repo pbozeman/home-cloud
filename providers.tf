@@ -18,7 +18,7 @@ terraform {
     }
     proxmox = {
       source  = "bpg/proxmox"
-      version = "0.37.0"
+      version = "0.38.1"
     }
     remote = {
       source  = "tenstad/remote"
