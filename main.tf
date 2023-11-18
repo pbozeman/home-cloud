@@ -78,3 +78,8 @@ module "vms" {
   nixos_username = var.nixos_username
   nixos_password = var.nixos_password
 }
+
+module "k3s" {
+  source = "./modules/k3s"
+  # FIXME: add dependency on vms
+}
