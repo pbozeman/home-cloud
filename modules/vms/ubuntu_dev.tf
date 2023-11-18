@@ -20,8 +20,8 @@ resource "proxmox_virtual_environment_vm" "ubuntu_dev" {
 
   lifecycle {
     ignore_changes = [
+      clone,
       started,
-      clone
     ]
   }
 }

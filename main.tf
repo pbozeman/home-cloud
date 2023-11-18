@@ -86,6 +86,6 @@ module "vms" {
 }
 
 module "k3s" {
-  source = "./modules/k3s"
-  # FIXME: add dependency on vms
+  source         = "./modules/k3s"
+  vms_dependency = module.vms.done
 }

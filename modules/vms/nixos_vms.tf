@@ -46,7 +46,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
 
   lifecycle {
     ignore_changes = [
-      clone
+      clone,
     ]
   }
 

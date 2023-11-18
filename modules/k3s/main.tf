@@ -34,6 +34,4 @@ module "subsequent" {
   ]
 
   ssh_options = "-o StrictHostKeyChecking=accept-new"
-
-  # FIXME: make a depends on first
 }
