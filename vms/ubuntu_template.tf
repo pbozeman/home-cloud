@@ -57,6 +57,10 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     type = "host"
   }
 
+  memory {
+    dedicated = 8192
+  }
+
   disk {
     datastore_id = "local-zfs"
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image[each.key].id
