@@ -1,3 +1,20 @@
+resource "proxmox_virtual_environment_dns" "pve" {
+  for_each = var.pve_nodes
+
+  domain    = data.proxmox_virtual_environment_dns.pve[each.key].domain
+  node_name = data.proxmox_virtual_environment_dns.pve[each.key].node_name
+
+  servers = [
+    "1.1.1.2",
+    "1.0.0.2"
+  ]
+}
+
+data "proxmox_virtual_environment_dns" "pve" {
+  for_each  = var.pve_nodes
+  node_name = each.key
+}
+
 # unattended pvecm requires that all the proxmox pve nodes can ssh
 # to each other
 resource "null_resource" "proxmox_ssh_config" {
