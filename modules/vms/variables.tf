@@ -9,6 +9,9 @@ variable "nixos_vms" {
     pve_node = string
     ip       = string
     gateway  = string
+    cores    = number
+    memory   = number
+    username = string
   }))
 }
 

@@ -4,12 +4,18 @@ locals {
       ip = var.cloudkey_01_ip
     }
   }
-  host_dns = merge(local.cloudkey_host, var.pve_nodes, var.nixos_vms)
+  host_dns = merge(
+    local.cloudkey_host,
+    var.pve_nodes,
+    var.nixos_dev_vms,
+    var.nixos_k3s_vms
+  )
 
   round_robin_dns = {
     pve = [for node in var.pve_nodes : node.ip]
-    k3s = [for node in var.nixos_vms : node.ip]
+    k3s = [for node in var.nixos_k3s_vms : node.ip]
   }
+
 }
 
 # DNS name for the physical servers and appliances
@@ -66,7 +72,7 @@ module "vms" {
 
   pve_nodes = var.pve_nodes
 
-  nixos_vms = var.nixos_vms
+  nixos_vms = merge(var.nixos_dev_vms, var.nixos_k3s_vms)
 
   ssh_pubkeys = var.ssh_pubkeys
 

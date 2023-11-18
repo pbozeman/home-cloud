@@ -18,11 +18,11 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
 
   cpu {
     type  = "host"
-    cores = 4
+    cores = each.value.cores
   }
 
   memory {
-    dedicated = 12288
+    dedicated = each.value.memory
   }
 
   initialization {
@@ -31,7 +31,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     vendor_data_file_id = proxmox_virtual_environment_file.cloud_config_vendor[each.value.pve_node].id
 
     user_account {
-      username = var.nixos_username
+      username = each.value.username
       password = var.nixos_password
       keys     = var.ssh_pubkeys
     }
@@ -43,21 +43,16 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
       }
     }
   }
-}
 
-# install nix, and reboot the node if it failed, as a reboot will return
-# to debian on a failed build
-resource "null_resource" "nixos_vms_install" {
-  for_each = var.nixos_vms
-
+  # keeping this in this resource rather than a separate resource so that
+  # it will always trigger on a create, but not on update. splitting it out
+  # has the advantage that it can reuse the vm if it failed. However, it
+  # won't rerun if the vm is trainted and re-created.
   provisioner "local-exec" {
-    # i'm sorry.
     command = <<EOF
       set -e
       cd ${path.module}/nixos
-      nix run github:numtide/nixos-anywhere -- --flake .#template ${var.nixos_username}@${[for ip in flatten(proxmox_virtual_environment_vm.nixos_vms[each.key].ipv4_addresses) : ip if !startswith(ip, "127.")][0]} --build-on-remote || (ssh root@#{each.value.pve_node} 'qm reset ${proxmox_virtual_environment_vm.nixos_vms[each.key].vm_id} && false')
+      nix run github:numtide/nixos-anywhere -- --flake .#template ${each.value.username}@${each.value.ip} --build-on-remote
     EOF
   }
-
-  # FIXME: trigger on vm rebild
 }
