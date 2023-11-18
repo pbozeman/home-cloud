@@ -1,6 +1,6 @@
 # DNS name for the physical servers and appliances
 module "cloudflare-physical" {
-  source = "./cloudflare"
+  source = "./modules/cloudflare"
 
   zone_id = var.cloudflare_zone_id
 
@@ -11,7 +11,7 @@ module "cloudflare-physical" {
 
 # The core unifi network
 module "unifi" {
-  source = "./unifi"
+  source = "./modules/unifi"
 
   domain_name = var.domain_name
 
@@ -35,7 +35,7 @@ module "unifi" {
 }
 
 module "proxmox" {
-  source = "./proxmox"
+  source = "./modules/proxmox"
 
   pve_nodes = var.pve_nodes
 
@@ -49,7 +49,7 @@ module "proxmox" {
 }
 
 module "vms" {
-  source = "./vms"
+  source = "./modules/vms"
 
   pve_nodes = var.pve_nodes
 
