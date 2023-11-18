@@ -1,12 +1,25 @@
+locals {
+  cloudkey_host = {
+    cloudkey = {
+      ip = var.cloudkey_01_ip
+    }
+  }
+  host_dns = merge(local.cloudkey_host, var.pve_nodes, var.nixos_vms)
+
+  round_robin_dns = {
+    pve = [for node in var.pve_nodes : node.ip]
+    k3s = [for node in var.nixos_vms : node.ip]
+  }
+}
+
 # DNS name for the physical servers and appliances
-module "cloudflare-physical" {
+module "cloudflare" {
   source = "./modules/cloudflare"
 
   zone_id = var.cloudflare_zone_id
 
-  cloudkey_ip = var.cloudkey_01_ip
-
-  pve_nodes = var.pve_nodes
+  hosts       = local.host_dns
+  round_robin = local.round_robin_dns
 }
 
 # The core unifi network

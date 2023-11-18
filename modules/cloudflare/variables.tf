@@ -2,12 +2,12 @@ variable "zone_id" {
   type = string
 }
 
-variable "cloudkey_ip" {
-  type = string
-}
-
-variable "pve_nodes" {
+variable "hosts" {
   type = map(object({
     ip = string
   }))
+}
+
+variable "round_robin" {
+  type = map(list(string))
 }

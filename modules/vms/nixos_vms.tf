@@ -38,7 +38,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
 
     ip_config {
       ipv4 {
-        address = each.value.ip
+        address = "${each.value.ip}/24"
         gateway = each.value.gateway
       }
     }

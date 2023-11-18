@@ -7,34 +7,34 @@ terraform {
   }
 }
 
-# cloudkey
-
-resource "cloudflare_record" "cloudkey" {
-  zone_id = var.zone_id
-  name    = "cloudkey"
-  value   = var.cloudkey_ip
-  type    = "A"
-  proxied = false
+locals {
+  # Flatten the round robin map into a list of objects with key and value
+  flattened_round_robin = flatten([
+    for key, values in var.round_robin : [
+      for value in values : {
+        key   = key
+        value = value
+      }
+    ]
+  ])
 }
 
-# the round robin dns for the pve cluster
-resource "cloudflare_record" "pve" {
-  for_each = var.pve_nodes
-
-  zone_id = var.zone_id
-  name    = "pve"
-  value   = each.value.ip
-  type    = "A"
-  proxied = false
-}
-
-# each pve node
-resource "cloudflare_record" "pve_node" {
-  for_each = var.pve_nodes
+resource "cloudflare_record" "host" {
+  for_each = var.hosts
 
   zone_id = var.zone_id
   name    = each.key
   value   = each.value.ip
+  type    = "A"
+  proxied = false
+}
+
+resource "cloudflare_record" "round_robin" {
+  for_each = { for item in local.flattened_round_robin : "${item.key}-${item.value}" => item }
+
+  zone_id = var.zone_id
+  name    = each.value.key
+  value   = each.value.value
   type    = "A"
   proxied = false
 }
