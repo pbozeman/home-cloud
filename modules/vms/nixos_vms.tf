@@ -54,8 +54,10 @@ resource "null_resource" "nixos_vms_install" {
     # i'm sorry.
     command = <<EOF
       set -e
-      cd vms/nixos
+      cd ${path.module}/nixos
       nix run github:numtide/nixos-anywhere -- --flake .#template ${var.nixos_username}@${[for ip in flatten(proxmox_virtual_environment_vm.nixos_vms[each.key].ipv4_addresses) : ip if !startswith(ip, "127.")][0]} --build-on-remote || (ssh root@#{each.value.pve_node} 'qm reset ${proxmox_virtual_environment_vm.nixos_vms[each.key].vm_id} && false')
     EOF
   }
+
+  # FIXME: trigger on vm rebild
 }
