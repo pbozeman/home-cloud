@@ -44,6 +44,12 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [
+      clone
+    ]
+  }
+
   # keeping this in this resource rather than a separate resource so that
   # it will always trigger on a create, but not on update. splitting it out
   # has the advantage that it can reuse the vm if it failed. However, it
