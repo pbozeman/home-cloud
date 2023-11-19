@@ -36,3 +36,13 @@ module "subsequent" {
 
   ssh_options = "-o StrictHostKeyChecking=accept-new"
 }
+
+resource "null_resource" "kubeconfig" {
+  count = try(file("~/.kube/config"), "") == "" ? 1 : 0
+
+  provisioner "local-exec" {
+    command = <<EOF
+      ssh root@${local.first_node} kubectl config view --raw | sed -e 's/127.0.0.1:6443/${var.k3s_name}:6443/' > ~/.kube/config
+    EOF
+  }
+}

@@ -2,6 +2,10 @@ variable "vms_dependency" {
   type = string
 }
 
+variable "k3s_name" {
+  type = string
+}
+
 variable "k3s_nodes" {
   type = map(object({
     ip           = string
