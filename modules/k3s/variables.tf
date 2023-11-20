@@ -1,5 +1,5 @@
-variable "vms_dependency" {
-  type = string
+variable "triggers" {
+  type = map(string)
 }
 
 variable "k3s_name" {

@@ -6,7 +6,3 @@ terraform {
     }
   }
 }
-
-output "done" {
-  value = "done"
-}
