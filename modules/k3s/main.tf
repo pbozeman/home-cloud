@@ -15,7 +15,7 @@ module "first" {
     "--build-host", "root@${local.first_node}"
   ]
 
-  ssh_options = "-o StrictHostKeyChecking=accept-new"
+  ssh_options = "-o StrictHostKeyChecking=no"
 
   trigger = var.triggers[local.first_node]
 }
@@ -33,7 +33,7 @@ module "subsequent" {
     "--build-host", "root@${each.key}"
   ]
 
-  ssh_options = "-o StrictHostKeyChecking=accept-new"
+  ssh_options = "-o StrictHostKeyChecking=no"
 
   trigger = var.triggers[each.key]
 }
