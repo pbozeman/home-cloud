@@ -47,7 +47,28 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
   lifecycle {
     ignore_changes = [
       clone,
+      disk,
     ]
+    prevent_destroy = true
+  }
+
+  # multi disk management with this provider is very buggy. Hence the manual
+  # creation here, and the ignore above.
+  provisioner "remote-exec" {
+    inline = [<<EOF
+      if [ "${each.value.data_disk_size}" -gt 0 ]; then
+        ssh root@${each.value.pve_node} \
+        "qm set ${self.vm_id} --virtio1 local-zfs:${each.value.data_disk_size},format=raw"
+      fi
+      EOF
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = var.proxmox_password
+      host     = each.value.pve_node
+    }
   }
 
   # keeping this in this resource rather than a separate resource so that

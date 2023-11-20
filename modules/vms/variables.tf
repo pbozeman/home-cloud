@@ -6,12 +6,13 @@ variable "pve_nodes" {
 
 variable "nixos_vms" {
   type = map(object({
-    pve_node = string
-    ip       = string
-    gateway  = string
-    cores    = number
-    memory   = number
-    username = string
+    pve_node       = string
+    ip             = string
+    gateway        = string
+    cores          = number
+    memory         = number
+    data_disk_size = number
+    username       = string
   }))
 }
 
