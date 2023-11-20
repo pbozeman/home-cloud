@@ -19,7 +19,13 @@
     fsType = "vfat";
   };
 
-  swapDevices = []; 
+  fileSystems."/var/lib/longhorn" = {
+    device = "/dev/vdb";
+    fsType = "ext4";
+    autoFormat = true;
+  };
+
+  swapDevices = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
