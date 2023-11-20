@@ -1,6 +1,8 @@
 { config, lib, pkgs, modulesPath, ... }: {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
+  time.timeZone = "America/Los_Angeles";
+
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
 
@@ -43,4 +45,14 @@
       KbdInteractiveAuthentication = false;
     };
   };
+
+  environment.systemPackages = with pkgs; [
+    jq
+    openiscsi
+  ];
+
+  # https://github.com/longhorn/longhorn/issues/2166
+  systemd.tmpfiles.rules = [
+    "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
+  ];
 }
