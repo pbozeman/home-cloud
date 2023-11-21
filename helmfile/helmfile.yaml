@@ -6,6 +6,9 @@ repositories:
     url: https://metallb.github.io/metallb
 
 releases:
+  #
+  # Longhorn
+  #
   - name: longhorn
     namespace: longhorn-system
     chart: longhorn/longhorn
@@ -14,6 +17,16 @@ releases:
       - service:
           ui:
             type: LoadBalancer
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          - "patch"
+          - "storageclass"
+          - "local-path"
+          - "-p"
+          - '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 
   - name: metallb
     namespace: metallb-system
