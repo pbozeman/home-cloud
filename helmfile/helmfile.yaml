@@ -5,6 +5,9 @@ repositories:
   - name: metallb
     url: https://metallb.github.io/metallb
 
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
 releases:
   #
   # Longhorn
@@ -28,6 +31,9 @@ releases:
           - "-p"
           - '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 
+  #
+  # metallb
+  #
   - name: metallb
     namespace: metallb-system
     chart: metallb/metallb
@@ -43,3 +49,17 @@ releases:
           - |
             kubectl wait --for=condition=available --timeout=60s deployment/metallb-controller -n metallb-system
             kubectl apply -f metallb-addresspool.yaml
+
+  #
+  # prometheus
+  #
+  # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+  # for cleanup
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    version: 54.1.0
+    values:
+      - grafana:
+          service:
+            type: LoadBalancer
