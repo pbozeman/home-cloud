@@ -63,6 +63,7 @@
     token = "FIXMEthisisnotrandom";
     clusterInit = is_first_host;
     serverAddr = if is_first_host == false then "https://${first_host}:6443" else "";
+    extraFlags = "--disable=traefik --disable=local-storage";
   };
 
   networking.firewall.allowedTCPPorts = [
