@@ -19,7 +19,7 @@ releases:
     values:
       - service:
           ui:
-            type: LoadBalancer
+            type: ClusterIP
 
   #
   # metallb
@@ -42,6 +42,9 @@ releases:
 
   #
   # prometheus
+  #
+  # NOTE: the first time helmfile is run it must be done with sync rather than
+  # apply, otherwise the crds don't get installed.
   #
   # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
   # for cleanup
