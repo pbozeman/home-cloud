@@ -47,3 +47,15 @@ resource "null_resource" "deploy" {
     command = "switch"
   }
 }
+
+resource "null_resource" "kubeconfig" {
+  count = try(file("~/.kube/config"), "") == "" ? 1 : 0
+
+  provisioner "local-exec" {
+    command = <<EOF
+      set -e
+      ssh root@${keys(var.k3s_nodes)[0]} kubectl config view --raw | sed -e 's/127.0.0.1:6443/${var.k3s_name}:6443/' > ~/.kube/config
+      chmod 600 ~/.kube/config
+    EOF
+  }
+}
