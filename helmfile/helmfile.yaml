@@ -1,4 +1,7 @@
 repositories:
+  - name: jetstack
+    url: https://charts.jetstack.io
+
   - name: longhorn
     url: https://charts.longhorn.io
 
@@ -46,6 +49,8 @@ releases:
   # NOTE: the first time helmfile is run it must be done with sync rather than
   # apply, otherwise the crds don't get installed.
   #
+  # TODO: see if something like the installCRDs from cert-manager will work here
+  #
   # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
   # for cleanup
   - name: kube-prometheus-stack
@@ -56,6 +61,17 @@ releases:
       - grafana:
           service:
             type: LoadBalancer
+
+  #
+  # cert-manager
+  #
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.7.1
+    set:
+      - name: installCRDs
+        value: true
 
   #
   # home-assistant
