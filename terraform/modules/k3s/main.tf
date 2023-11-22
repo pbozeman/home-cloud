@@ -1,51 +1,49 @@
 locals {
-  init_nodes = { for k, v in var.k3s_nodes : k => v if v.cluster_init == true }
-  first_node = keys(local.init_nodes)[0]
-
-  subsequent_nodes = { for k, v in var.k3s_nodes : k => v if v.cluster_init == false }
+  flake_path = "./${path.module}/nixos"
 }
-module "first" {
-  source = "github.com/pbozeman/terraform-nixos-ng/nixos"
 
-  host = "root@${local.first_node}"
+resource "local_file" "flake" {
+  content         = templatefile("${local.flake_path}/flake.tftpl", { hosts = keys(var.k3s_nodes) })
+  filename        = "${local.flake_path}/flake.nix"
+  file_permission = "644"
+}
 
-  flake = "./${path.module}/nixos#first"
+data "external" "instantiate" {
+  for_each = var.k3s_nodes
+  program  = ["${path.module}/instantiate.sh", "path:${local.flake_path}#nixosConfigurations.${each.key}"]
 
-  arguments = [
-    "--build-host", "root@${local.first_node}"
+  depends_on = [
+    local_file.flake
   ]
-
-  ssh_options = "-o StrictHostKeyChecking=no"
-
-  trigger = var.triggers[local.first_node]
 }
 
-module "subsequent" {
-  for_each = local.subsequent_nodes
+resource "null_resource" "deploy" {
+  for_each = var.k3s_nodes
 
-  source = "github.com/pbozeman/terraform-nixos-ng/nixos"
-
-  host = "root@${each.key}"
-
-  flake = "./${path.module}/nixos#subsequent"
-
-  arguments = [
-    "--build-host", "root@${each.key}"
-  ]
-
-  ssh_options = "-o StrictHostKeyChecking=no"
-
-  trigger = var.triggers[each.key]
-}
-
-resource "null_resource" "kubeconfig" {
-  count = try(file("~/.kube/config"), "") == "" ? 1 : 0
+  triggers = {
+    derivation = data.external.instantiate[each.key].result["path"]
+    trigger    = var.triggers[each.key]
+  }
 
   provisioner "local-exec" {
-    command = <<EOF
-      set -e
-      ssh root@${local.first_node} kubectl config view --raw | sed -e 's/127.0.0.1:6443/${var.k3s_name}:6443/' > ~/.kube/config
-      chmod 600 ~/.kube/config
-    EOF
+    environment = {
+      NIX_SSHOPTS = "-o StrictHostKeyChecking=no"
+    }
+
+    interpreter = concat(
+      ["nix",
+        "--extra-experimental-features", "nix-command flakes",
+        "shell",
+        "github:NixOS/nixpkgs/22.11#nixos-rebuild",
+        "--command",
+        "nixos-rebuild",
+        "--fast",
+        "--flake", "path:${local.flake_path}#${each.key}",
+        "--target-host", "root@${each.key}",
+        "--build-host", "root@${each.key}",
+      ]
+    )
+
+    command = "switch"
   }
 }

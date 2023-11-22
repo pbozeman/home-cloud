@@ -1,0 +1,14 @@
+{ inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
+
+  outputs = { nixpkgs, ... }: {
+    %{ for host in hosts ~}
+    nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      modules = [
+        ./base.nix
+        ${ host == hosts[0] ? "./k3s-first.nix" : "./k3s-subsequent.nix" }
+      ];
+    };
+    %{ endfor ~}
+  };
+}
