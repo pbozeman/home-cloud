@@ -46,9 +46,11 @@
     };
   };
 
+  services.openiscsi.enable = true;
+  services.openiscsi.name = "iqn.2023-21.local:{config.hostname}";
+
   environment.systemPackages = with pkgs; [
     jq
-    openiscsi
   ];
 
   # https://github.com/longhorn/longhorn/issues/2166
