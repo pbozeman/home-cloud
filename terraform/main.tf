@@ -67,12 +67,13 @@ module "proxmox" {
   proxmox_ssh_pubkey  = var.proxmox_ssh_pubkey
 }
 
+# FIXME: reintroduce dev vm. It used to be here. See comment in nixos_vms.
 module "vms" {
   source = "./modules/vms"
 
   pve_nodes = var.pve_nodes
 
-  nixos_vms = merge(var.nixos_dev_vms, var.nixos_k3s_vms)
+  nixos_vms = var.nixos_k3s_vms
 
   ssh_pubkeys = var.ssh_pubkeys
 

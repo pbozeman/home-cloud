@@ -1,3 +1,7 @@
+# FIXME: it was a bad idea to merge all the vms together.
+# Specifically, the dev vm needs to be kept searpate so that low level
+# changes can be made to the vms without recreating the dev vm.
+# Undo this generalization.
 resource "proxmox_virtual_environment_vm" "nixos_vms" {
   for_each = var.nixos_vms
 
