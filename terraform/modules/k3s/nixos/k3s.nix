@@ -1,4 +1,12 @@
-{ config, lib, pkgs, modulesPath, ... }: {
+{ config,
+  lib,
+  pkgs,
+  modulesPath,
+  hostname,
+  is_first_host,
+  first_host,
+  ... }: {
+
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
   time.timeZone = "America/Los_Angeles";
@@ -47,7 +55,24 @@
   };
 
   services.openiscsi.enable = true;
-  services.openiscsi.name = "iqn.2023-21.local:{config.hostname}";
+  services.openiscsi.name = "iqn.2023-21.local:${hostname}";
+
+  services.k3s = {
+    enable = true;
+    role = "server";
+    token = "FIXMEthisisnotrandom";
+    clusterInit = is_first_host;
+    serverAddr = if is_first_host == false then "https://${first_host}:6443" else "";
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
+    2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
+    2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+  ];
+  networking.firewall.allowedUDPPorts = [
+    8472 # k3s, flannel: required if using multi-node for inter-node networking
+  ];
 
   environment.systemPackages = with pkgs; [
     jq
