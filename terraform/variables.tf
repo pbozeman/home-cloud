@@ -19,7 +19,8 @@ variable "unifi_username" {
 }
 
 variable "unifi_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "unifi_api_url" {
@@ -31,7 +32,8 @@ variable "trusted_ssid" {
 }
 
 variable "trusted_passphrase" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "iot_ssid" {
@@ -39,7 +41,8 @@ variable "iot_ssid" {
 }
 
 variable "iot_passphrase" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "kids_ssid" {
@@ -47,7 +50,8 @@ variable "kids_ssid" {
 }
 
 variable "kids_passphrase" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "guest_ssid" {
@@ -55,7 +59,8 @@ variable "guest_ssid" {
 }
 
 variable "guest_passphrase" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "cloudkey_01_ip" {
@@ -107,11 +112,13 @@ variable "proxmox_username" {
 }
 
 variable "proxmox_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "proxmox_ssh_privkey" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "proxmox_ssh_pubkey" {
@@ -123,7 +130,8 @@ variable "ubuntu_username" {
 }
 
 variable "ubuntu_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "nixos_username" {
@@ -131,5 +139,6 @@ variable "nixos_username" {
 }
 
 variable "nixos_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
