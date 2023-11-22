@@ -54,8 +54,16 @@ resource "null_resource" "kubeconfig" {
   provisioner "local-exec" {
     command = <<EOF
       set -e
-      ssh root@${keys(var.k3s_nodes)[0]} kubectl config view --raw | sed -e 's/127.0.0.1:6443/${var.k3s_name}:6443/' > ~/.kube/config
+      ssh -o StrictHostKeyChecking=no root@${keys(var.k3s_nodes)[0]} kubectl config view --raw | sed -e 's/127.0.0.1:6443/${var.k3s_name}:6443/' > ~/.kube/config
       chmod 600 ~/.kube/config
     EOF
   }
+
+  triggers = {
+    deploy = null_resource.deploy[keys(var.k3s_nodes)[0]].id
+  }
+
+  depends_on = [
+    null_resource.deploy
+  ]
 }
