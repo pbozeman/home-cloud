@@ -1,0 +1,22 @@
+image:
+  repository: homeassistant/home-assistant
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 8123
+
+persistence:
+  enabled: true
+  storageClassName: longhorn
+  accessMode: ReadWriteOnce
+  size: 5Gi
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi

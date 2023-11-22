@@ -63,3 +63,18 @@ releases:
       - grafana:
           service:
             type: LoadBalancer
+
+  #
+  # home-assistant
+  #
+  - name: home-assistant
+    namespace: home-assistant
+    chart: ./charts/home-assistant
+    version: 1.0.0
+    values:
+      - image:
+          repository: homeassistant/home-assistant
+          tag: stable
+        service:
+          type: LoadBalancer
+          port: 8123
