@@ -28,6 +28,10 @@ terraform {
       source  = "paultyng/unifi"
       version = "0.41.0"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "4.0.4"
+    }
   }
 }
 
