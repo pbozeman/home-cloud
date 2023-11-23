@@ -41,7 +41,7 @@ releases:
           - "-c"
           - |
             kubectl wait --for=condition=available --timeout=60s deployment/metallb-controller -n metallb-system
-            kubectl apply -f metallb-addresspool.yaml
+            kubectl apply -f manifests/metallb/addresspool.yaml
 
   #
   # prometheus
