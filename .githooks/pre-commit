@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+PROTECTED="prevent_destroy = true"
+FILE_PATH="terraform/modules/vms/nixos_vms.tf"
+
+if git diff --cached -- "$FILE_PATH" | grep -q "^-.*$PROTECTED"; then
+	echo "Error: Attempt to commit changes to $PROTECTED in $FILE_PATH"
+	exit 1
+fi
