@@ -49,8 +49,6 @@ resource "null_resource" "deploy" {
 }
 
 resource "null_resource" "kubeconfig" {
-  count = try(file("~/.kube/config"), "") == "" ? 1 : 0
-
   provisioner "local-exec" {
     command = <<EOF
       set -e
@@ -61,6 +59,8 @@ resource "null_resource" "kubeconfig" {
 
   triggers = {
     deploy = null_resource.deploy[keys(var.k3s_nodes)[0]].id
+
+    file_empty = try(file("~/.kube/config"), "") == ""
   }
 
   depends_on = [
