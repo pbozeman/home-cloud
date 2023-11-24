@@ -8,7 +8,8 @@ locals {
     local.cloudkey_host,
     var.pve_nodes,
     var.nixos_dev_vms,
-    var.nixos_k3s_vms
+    var.nixos_k3s_vms,
+    var.k3s_services,
   )
 
   round_robin_dns = {

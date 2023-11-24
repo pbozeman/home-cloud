@@ -61,9 +61,8 @@ releases:
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
     values:
-      - grafana:
-          service:
-            type: LoadBalancer
+      - values/common.yaml
+      - values/prometheus.yaml
 
   #
   # cert-manager
@@ -86,7 +85,7 @@ releases:
     chart: ./charts/wildcard
     version: 0.1.0
     values:
-      - values/cloudflare.yaml
+      - values/common.yaml
     secrets:
       - secrets/cloudflare.yaml
 

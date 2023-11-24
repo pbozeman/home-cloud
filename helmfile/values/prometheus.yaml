@@ -1,0 +1,12 @@
+grafana:
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+    tls:
+      - hosts:
+          - "grafana.blinkies.io"
+    hosts:
+      - grafana.blinkies.io
+    paths:
+      - /
