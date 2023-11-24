@@ -1,0 +1,4 @@
+apiVersion: v2
+name: wildcard
+description: A Helm chart to create a wildcard domain
+version: 0.1.0

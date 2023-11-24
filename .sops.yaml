@@ -1,0 +1,7 @@
+keys:
+  - &pbozeman-dev age1mz9l2esa3xvvpzpf8dgccmh3v9573gjpyhfc6hspxrr86mg3rgzq589yhy
+creation_rules:
+  - path_regex: helmfile/secrets/*
+    key_groups:
+      - age:
+          - *pbozeman-dev

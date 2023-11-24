@@ -69,9 +69,23 @@ releases:
     namespace: cert-manager
     chart: jetstack/cert-manager
     version: v1.7.1
+    labels:
+      name: cert-manager
     set:
       - name: installCRDs
         value: true
+
+  #
+  # Wildcard
+  #
+  - name: wildcard
+    namespace: cert-manager
+    chart: ./charts/wildcard
+    version: 0.1.0
+    values:
+      - values/cloudflare.yaml
+    secrets:
+      - secrets/cloudflare.yaml
 
   #
   # home-assistant
