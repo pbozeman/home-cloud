@@ -92,7 +92,7 @@ releases:
   #
   # Nginx
   #
-  - name: nginx-ingress
+  - name: ingress-nginx
     namespace: ingress-nginx
     createNamespace: true
     chart: ingress-nginx/ingress-nginx
