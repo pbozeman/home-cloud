@@ -14,6 +14,9 @@ repositories:
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
 
+  - name: twuni
+    url: https://helm.twun.io
+
 releases:
   #
   # Longhorn
@@ -99,6 +102,18 @@ releases:
     version: 4.8.3
     values:
       - values/nginx-ingress.yaml
+
+  #
+  # Docker registry
+  #
+  - name: docker-registry
+    namespace: docker-registry
+    chart: twuni/docker-registry
+    version: 2.2.2
+    values:
+      - values/docker-registry.yaml
+    secrets:
+      - secrets/docker-registry.yaml
 
   #
   # home-assistant
