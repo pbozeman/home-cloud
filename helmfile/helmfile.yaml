@@ -123,9 +123,6 @@ releases:
     chart: ./charts/home-assistant
     version: 1.0.0
     values:
-      - image:
-          repository: homeassistant/home-assistant
-          tag: stable
-        service:
-          type: LoadBalancer
-          port: 8123
+      - values/home-assistant.yaml
+    secrets:
+      - secrets/docker-registry.yaml

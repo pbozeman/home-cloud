@@ -1,0 +1,6 @@
+image:
+  repository: registry.blinkies.io/home-assistant
+  tag: stable
+service:
+  type: LoadBalancer
+  port: 8123

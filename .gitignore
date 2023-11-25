@@ -1,4 +1,5 @@
-**/modules/k3s/nixos/flake.nix
+terraform/modules/k3s/nixos/flake.nix
+images/home-assistant/.config
 
 
 # Local .terraform directories
