@@ -90,6 +90,8 @@ releases:
     chart: ingress-nginx/ingress-nginx
     version: 4.8.3
     wait: true
+    needs:
+      - cert-manager/wildcard
     values:
       - values/nginx-ingress.yaml
 
@@ -107,7 +109,9 @@ releases:
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
-    wait: true
+    needs:
+      - ingress-nginx/ingress-nginx
+      - longhorn-system/longhorn
     values:
       - values/common.yaml
       - values/prometheus.yaml
@@ -124,17 +128,25 @@ releases:
     namespace: logging
     chart: grafana/loki-stack
     version: 2.9.11
+    needs:
+      - ingress-nginx/ingress-nginx
+      - longhorn-system/longhorn
     values:
       - values/loki-stack.yaml
 
   #
   # Docker registry
   #
+  # while it seems like it would be good to wait here, the registry
+  # often has pods that get stuck during re-apply and cleaned up later,
+  # even when it's functioning correctly at a higher level.
   - name: docker-registry
     namespace: docker-registry
     chart: twuni/docker-registry
     version: 2.2.2
-    wait: true
+    needs:
+      - ingress-nginx/ingress-nginx
+      - longhorn-system/longhorn
     values:
       - values/docker-registry.yaml
     secrets:
@@ -147,7 +159,9 @@ releases:
     namespace: mosquitto-mqtt
     chart: ./charts/mosquitto-mqtt
     version: 1.0.0
-    wait: true
+    needs:
+      - docker-registry/docker-registry
+      - longhorn-system/longhorn
     set:
       - name: installCRDs
         value: true
@@ -161,7 +175,10 @@ releases:
     namespace: home-assistant
     chart: ./charts/home-assistant
     version: 1.0.0
-    wait: true
+    needs:
+      - docker-registry/docker-registry
+      - ingress-nginx/ingress-nginx
+      - longhorn-system/longhorn
     values:
       - values/home-assistant.yaml
     secrets:
