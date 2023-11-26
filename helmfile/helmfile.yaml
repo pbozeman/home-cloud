@@ -120,13 +120,12 @@ releases:
   #
   # loki
   #
-  - name: loki
+  - name: loki-stack
     namespace: logging
-    chart: grafana/loki
-    version: 5.38.0
-    wait: true
+    chart: grafana/loki-stack
+    version: 2.9.11
     values:
-      - values/loki.yaml
+      - values/loki-stack.yaml
 
   #
   # Docker registry
