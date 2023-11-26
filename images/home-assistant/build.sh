@@ -25,7 +25,7 @@ docker tag $REPOSITORY_NAME:$IMAGE_TAG $REGISTRY_URL/$REPOSITORY_NAME:$IMAGE_TAG
 
 # Step 3: Login to your private registry
 echo "Logging in to $REGISTRY_URL..."
-docker login $REGISTRY_URL
+docker login -u nobody -p none $REGISTRY_URL
 if [ $? -ne 0 ]; then
 	echo "Docker login failed, exiting..."
 	exit 1
