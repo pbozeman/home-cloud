@@ -137,13 +137,11 @@ releases:
   #
   # Docker registry
   #
-  # while it seems like it would be good to wait here, the registry
-  # often has pods that get stuck during re-apply and cleaned up later,
-  # even when it's functioning correctly at a higher level.
   - name: docker-registry
     namespace: docker-registry
     chart: twuni/docker-registry
     version: 2.2.2
+    wait: true
     needs:
       - ingress-nginx/ingress-nginx
       - longhorn-system/longhorn

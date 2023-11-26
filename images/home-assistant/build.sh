@@ -23,6 +23,10 @@ fi
 echo "Tagging the image..."
 docker tag $REPOSITORY_NAME:$IMAGE_TAG $REGISTRY_URL/$REPOSITORY_NAME:$IMAGE_TAG
 
+# TODO: add a step where we check to make sure the endpoint is
+# stable. On first bring up, it will likley 503 until it has
+# initialized.
+#
 # Step 3: Login to your private registry
 echo "Logging in to $REGISTRY_URL..."
 docker login -u nobody -p none $REGISTRY_URL
