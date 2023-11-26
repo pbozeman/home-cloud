@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Navigate to the directory of this script
+cd $(dirname $(readlink -f $0))
+
 # Variables
 REGISTRY_URL="registry.blinkies.io"
 REPOSITORY_NAME="home-assistant"

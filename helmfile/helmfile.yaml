@@ -1,4 +1,7 @@
 repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
 
@@ -50,24 +53,6 @@ releases:
             kubectl apply -f manifests/metallb/addresspool.yaml
 
   #
-  # prometheus
-  #
-  # NOTE: the first time helmfile is run it must be done with sync rather than
-  # apply, otherwise the crds don't get installed.
-  #
-  # TODO: see if something like the installCRDs from cert-manager will work here
-  #
-  # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
-  # for cleanup
-  - name: kube-prometheus-stack
-    namespace: monitoring
-    chart: prometheus-community/kube-prometheus-stack
-    version: 54.1.0
-    values:
-      - values/common.yaml
-      - values/prometheus.yaml
-
-  #
   # cert-manager
   #
   - name: cert-manager
@@ -104,6 +89,39 @@ releases:
       - values/nginx-ingress.yaml
 
   #
+  # prometheus
+  #
+  # NOTE: the first time helmfile is run it must be done with sync rather than
+  # apply, otherwise the crds don't get installed.
+  #
+  # TODO: see if something like the installCRDs from cert-manager will work here
+  #
+  # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+  # for cleanup
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    version: 54.1.0
+    values:
+      - values/common.yaml
+      - values/prometheus.yaml
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args: ["apply", "-f", "manifests/monitoring/"]
+
+  #
+  # loki
+  #
+  - name: loki
+    namespace: logging
+    chart: grafana/loki
+    version: 5.38.0
+    values:
+      - values/loki.yaml
+
+  #
   # Docker registry
   #
   - name: docker-registry
@@ -116,6 +134,19 @@ releases:
       - secrets/docker-registry.yaml
 
   #
+  # mosquitto-mqtt
+  #
+  - name: mosquitto-mqtt
+    namespace: mosquitto-mqtt
+    chart: ./charts/mosquitto-mqtt
+    version: 1.0.0
+    set:
+      - name: installCRDs
+        value: true
+    values:
+      - values/mosquitto-mqtt.yaml
+
+  #
   # home-assistant
   #
   - name: home-assistant
@@ -126,3 +157,8 @@ releases:
       - values/home-assistant.yaml
     secrets:
       - secrets/docker-registry.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "sh"
+        args: ["../images/home-assistant/build.sh"]

@@ -1,0 +1,17 @@
+# https://longhorn.io/docs/1.5.3/monitoring/prometheus-and-grafana-setup/
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: longhorn-prometheus-servicemonitor
+  namespace: default
+  labels:
+    name: longhorn-prometheus-servicemonitor
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  namespaceSelector:
+    matchNames:
+      - longhorn-system
+  endpoints:
+    - port: manager

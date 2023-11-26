@@ -67,10 +67,17 @@
   };
 
   networking.firewall.allowedTCPPorts = [
-    6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
-    2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
-    2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+    # https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+    6443
+    2379
+    2380
+    7946
+    9100
+    10250
+    10259
+    10257
   ];
+
   networking.firewall.allowedUDPPorts = [
     8472 # k3s, flannel: required if using multi-node for inter-node networking
   ];
@@ -86,15 +93,15 @@
 
   # https://docs.k3s.io/installation/private-registry
   # TODO: pass in the domain name as a variable
-  environment.etc = {
-    "rancher/k3s/registries.yaml" = {
-      text = ''
-        mirrors:
-          blinkies.io
-            endpoint:
-              - "https://registry.blinkies.io:443"
-      '';
-      mode = "0440";
-    };
-  };
+  #environment.etc = {
+  #  "rancher/k3s/registries.yaml" = {
+  #    text = ''
+  #      mirrors:
+  #        blinkies.io
+  #          endpoint:
+  #            - "https://registry.blinkies.io:443"
+  #    '';
+  #    mode = "0440";
+  #  };
+  #};
 }
