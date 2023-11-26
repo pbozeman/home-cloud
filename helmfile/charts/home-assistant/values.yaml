@@ -1,7 +1,7 @@
 image:
   repository: homeassistant/home-assistant
   tag: stable
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   type: ClusterIP
