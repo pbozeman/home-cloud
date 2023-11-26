@@ -28,6 +28,7 @@ releases:
     namespace: longhorn-system
     chart: longhorn/longhorn
     version: 1.5.3
+    wait: true
     values:
       - service:
           ui:
@@ -40,6 +41,7 @@ releases:
     namespace: metallb-system
     chart: metallb/metallb
     version: 0.13.12
+    wait: true
 
     # TODO: this seems so janky. this can't really be the best practice, is it?
     hooks:
@@ -59,6 +61,7 @@ releases:
     namespace: cert-manager
     chart: jetstack/cert-manager
     version: v1.7.1
+    wait: true
     labels:
       name: cert-manager
     set:
@@ -72,6 +75,7 @@ releases:
     namespace: cert-manager
     chart: ./charts/wildcard
     version: 0.1.0
+    wait: true
     values:
       - values/common.yaml
     secrets:
@@ -85,6 +89,7 @@ releases:
     createNamespace: true
     chart: ingress-nginx/ingress-nginx
     version: 4.8.3
+    wait: true
     values:
       - values/nginx-ingress.yaml
 
@@ -102,6 +107,7 @@ releases:
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
+    wait: true
     values:
       - values/common.yaml
       - values/prometheus.yaml
@@ -118,6 +124,7 @@ releases:
     namespace: logging
     chart: grafana/loki
     version: 5.38.0
+    wait: true
     values:
       - values/loki.yaml
 
@@ -128,6 +135,7 @@ releases:
     namespace: docker-registry
     chart: twuni/docker-registry
     version: 2.2.2
+    wait: true
     values:
       - values/docker-registry.yaml
     secrets:
@@ -140,6 +148,7 @@ releases:
     namespace: mosquitto-mqtt
     chart: ./charts/mosquitto-mqtt
     version: 1.0.0
+    wait: true
     set:
       - name: installCRDs
         value: true
@@ -153,6 +162,7 @@ releases:
     namespace: home-assistant
     chart: ./charts/home-assistant
     version: 1.0.0
+    wait: true
     values:
       - values/home-assistant.yaml
     secrets:
