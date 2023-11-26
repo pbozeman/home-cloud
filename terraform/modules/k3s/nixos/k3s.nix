@@ -83,4 +83,18 @@
   systemd.tmpfiles.rules = [
     "L+ /usr/local/bin - - - - /run/current-system/sw/bin/"
   ];
+
+  # https://docs.k3s.io/installation/private-registry
+  # TODO: pass in the domain name as a variable
+  environment.etc = {
+    "rancher/k3s/registries.yaml" = {
+      text = ''
+        mirrors:
+          blinkies.io
+            endpoint:
+              - "https://registry.blinkies.io:443"
+      '';
+      mode = "0440";
+    };
+  };
 }
