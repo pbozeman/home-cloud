@@ -169,6 +169,16 @@ releases:
       - secrets/mosquitto-mqtt.yaml
 
   #
+  # zigbee2mqtt
+  #
+  - name: zigbee2mqtt
+    namespace: home-automation
+    chart: ./charts/zigbee2mqtt
+    version: 1.0.0
+    needs:
+      - home-automation/mosquitto-mqtt
+
+  #
   # home-assistant
   #
   - name: home-assistant

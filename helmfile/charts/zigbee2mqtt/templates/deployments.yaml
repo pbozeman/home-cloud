@@ -1,0 +1,52 @@
+# use env vars rather than a config map to pass in values becaause
+# zigbee2mqtt tries to ovewrite the config, which is not allowed
+# by k8s
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zigbee2mqtt
+  labels:
+    app: zigbee2mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zigbee2mqtt
+  template:
+    metadata:
+      labels:
+        app: zigbee2mqtt
+    spec:
+      containers:
+        - name: zigbee2mqtt
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+          ports:
+            - containerPort: 8080
+          env:
+            # https://github.com/Koenkk/zigbee2mqtt/discussions/13584
+            # TODO: the mqtt device needs a static ip back in terraform.
+            # Both IPs below should be passed in via config
+            - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
+              value: "mqtt://192.168.10.51:1883"
+            - name: ZIGBEE2MQTT_CONFIG_HOMEASSISTANT
+              value: "true"
+            - name: ZIGBEE2MQTT_CONFIG_PERMIT_JOIN
+              value: "false"
+            - name: ZIGBEE2MQTT_CONFIG_SERIAL_PORT
+              value: "tcp://192.168.10.178:6638"
+          volumeMounts:
+            - name: zigbee2mqtt-data
+              mountPath: /app/data
+      volumes:
+        - name: config
+        - name: zigbee2mqtt-data
+          persistentVolumeClaim:
+            claimName: zigbee2mqtt-pvc

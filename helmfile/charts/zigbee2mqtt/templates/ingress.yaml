@@ -1,0 +1,23 @@
+# TODO: make a template
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: zigbee2mqtt
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "zigbee2mqtt.blinkies.io"
+  rules:
+    - host: "zigbee2mqtt.blinkies.io"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: zigbee2mqtt
+                port:
+                  number: 8080
