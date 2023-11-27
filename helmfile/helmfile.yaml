@@ -154,7 +154,7 @@ releases:
   # mosquitto-mqtt
   #
   - name: mosquitto-mqtt
-    namespace: mosquitto-mqtt
+    namespace: home-automation
     chart: ./charts/mosquitto-mqtt
     version: 1.0.0
     needs:
@@ -170,7 +170,7 @@ releases:
   # home-assistant
   #
   - name: home-assistant
-    namespace: home-assistant
+    namespace: home-automation
     chart: ./charts/home-assistant
     version: 1.0.0
     needs:
