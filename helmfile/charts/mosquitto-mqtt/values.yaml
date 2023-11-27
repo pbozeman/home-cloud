@@ -4,9 +4,6 @@ image:
   pullPolicy: IfNotPresent
   tag: "latest"
 service:
-  type: ClusterIP
-  externalIPs:
-    - 192.168.10.51
   port: 1883
 persistence:
   enabled: true

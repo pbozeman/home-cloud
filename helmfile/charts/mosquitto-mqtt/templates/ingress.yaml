@@ -1,0 +1,22 @@
+# Todo: this worked, but isn't being used. Decide to purge or ressurect
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: mosquitto-mqtt-ingress
+#  annotations:
+#    nginx.org/tcp-services: "8883:mosquitto-mqtt"
+#spec:
+#  tls:
+#    - hosts:
+#        - mqtt.blinkies.io
+#  rules:
+#    - host: mqtt.blinkies.io
+#      http:
+#        paths:
+#          - backend:
+#              service:
+#                name: mosquitto-mqtt
+#                port:
+#                  number: 1883
+#            path: /
+#            pathType: ImplementationSpecific

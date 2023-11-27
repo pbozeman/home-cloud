@@ -3,7 +3,8 @@ kind: Service
 metadata:
   name: mosquitto-mqtt
 spec:
-  type: {{ .Values.service.type }}
+  type: LoadBalancer
+  LoadBlancerIP: 192.168.10.51
   ports:
     - port: {{ .Values.service.port }}
       targetPort: mqtt

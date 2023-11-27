@@ -28,7 +28,19 @@ spec:
           ports:
             - name: mqtt
               containerPort: {{ .Values.service.port }}
+          volumeMounts:
+            - name: config
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: mosquitto.conf
+              readOnly: true
+            - name: secrets
+              mountPath: /mosquitto/config/passwords.conf
+              subPath: passwords.conf
+              readOnly: true
       volumes:
         - name: config
-          persistentVolumeClaim:
-            claimName: mosquitto-mqtt-pvc
+          configMap:
+            name: mosquitto-mqtt
+        - name: secrets
+          secret:
+            secretName: mosquitto-mqtt

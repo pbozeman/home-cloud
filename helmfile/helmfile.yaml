@@ -165,6 +165,8 @@ releases:
         value: true
     values:
       - values/mosquitto-mqtt.yaml
+    secrets:
+      - secrets/mosquitto-mqtt.yaml
 
   #
   # home-assistant
