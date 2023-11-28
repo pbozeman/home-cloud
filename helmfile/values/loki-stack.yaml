@@ -16,8 +16,5 @@ loki:
       - secretName: loki-tls # If you're using TLS
         hosts:
           - loki.blinkies.io
-
-promtail:
-
 grafana:
   enabled: false

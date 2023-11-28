@@ -46,7 +46,6 @@ spec:
             - name: zigbee2mqtt-data
               mountPath: /app/data
       volumes:
-        - name: config
         - name: zigbee2mqtt-data
           persistentVolumeClaim:
             claimName: zigbee2mqtt-pvc

@@ -76,6 +76,8 @@ releases:
     chart: ./charts/wildcard
     version: 0.1.0
     wait: true
+    needs:
+      - cert-manager/cert-manager
     values:
       - values/common.yaml
     secrets:
