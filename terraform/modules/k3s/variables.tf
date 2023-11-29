@@ -1,7 +1,3 @@
-variable "triggers" {
-  type = map(string)
-}
-
 variable "k3s_name" {
   type = string
 }

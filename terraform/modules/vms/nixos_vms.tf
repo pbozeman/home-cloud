@@ -127,7 +127,3 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     EOF
   }
 }
-
-output "version" {
-  value = { for k, v in proxmox_virtual_environment_vm.nixos_vms : k => sha1(join("", sort(v.mac_addresses))) }
-}

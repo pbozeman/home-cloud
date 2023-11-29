@@ -22,7 +22,6 @@ resource "null_resource" "deploy" {
 
   triggers = {
     derivation = data.external.instantiate[each.key].result["path"]
-    trigger    = var.triggers[each.key]
   }
 
   provisioner "local-exec" {
