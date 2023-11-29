@@ -1,0 +1,4 @@
+apiVersion: v2
+name: nop
+description: A Helm chart to do nothing
+version: 0.1.0
