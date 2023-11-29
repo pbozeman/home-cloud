@@ -97,7 +97,7 @@ releases:
   # Wildcard
   #
   - name: wildcard
-    namespace: cert-manager
+    namespace: ingress-nginx
     chart: ./charts/wildcard
     version: 0.1.0
     disableValidation: true
@@ -118,8 +118,6 @@ releases:
     chart: ingress-nginx/ingress-nginx
     version: 4.8.3
     wait: true
-    needs:
-      - cert-manager/wildcard
     values:
       - values/nginx-ingress.yaml
 
@@ -247,3 +245,29 @@ releases:
         showlogs: true
         command: "sh"
         args: ["../images/home-assistant/build.sh"]
+
+#
+# TLS Secret
+#
+# a tls secret can be pre-seeded into a fresh cluster. This is helpful
+# if doing a lot of cluster wipe and reinstalls so that we don't exceed
+# letsencrypt quotas (which are only 5 certs a week)
+hooks:
+  - events: ["preapply"]
+    showlogs: true
+    command: "sh"
+    args:
+      - "-c"
+      - |
+        # Check if the tls file exists
+        if [ -f secrets/wildcard-tls.yaml ]; then
+          NS="ingress-nginx"
+
+          # create namespace, if needed
+          kubectl get namespace $NS > /dev/null 2>&1 || \
+            kubectl create namespace $NS
+
+          # create tls cert, if needed
+          kubectl get secret wildcard-blinkies.io-tls -n $NS > /dev/null 2>&1 || \
+            sops --decrypt secrets/wildcard-tls.yaml | kubectl apply -f -
+        fi

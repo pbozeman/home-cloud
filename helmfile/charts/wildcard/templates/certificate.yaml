@@ -3,7 +3,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: wildcard-blinkies.io
-  namespace: ingress-nginx
 spec:
   secretName: wildcard-blinkies.io-tls
   issuerRef:
