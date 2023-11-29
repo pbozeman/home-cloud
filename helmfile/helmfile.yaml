@@ -100,6 +100,7 @@ releases:
     namespace: cert-manager
     chart: ./charts/wildcard
     version: 0.1.0
+    disableValidation: true
     wait: true
     needs:
       - cert-manager/cert-manager
@@ -136,6 +137,7 @@ releases:
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
+    disableValidation: true
     needs:
       - ingress-nginx/ingress-nginx
       - longhorn-system/longhorn
