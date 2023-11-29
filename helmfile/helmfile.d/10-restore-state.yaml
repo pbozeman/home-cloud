@@ -1,10 +1,37 @@
-# TODO: restore pvc state from backup
+# restore pvs from backup, but only if they don't exist
+releases:
+  - name: restore-state-pvc
+    namespace: restore-state
+    chart: ../charts/nop
+    hooks:
+      - events: ["preapply", "presync"]
+        showlogs: true
+        command: "sh"
+        args:
+          - "-c"
+          - |
+            echo "RESTORE: checking for existing pvcs"
+            # Check for existing pvc in any namespace and return early if found
+            # Note: this errs on the side of caution by checking for *any* pvc.
+            if ! kubectl get pvc --all-namespaces 2>&1 | grep -q 'No resources found'; then
+              echo "RESTORE: pvcs exist in the cluster, will not restore state"
+              exit 0
+            fi
 
-hooks:
-  - events: ["preapply"]
-    showlogs: true
-    command: "sh"
-    args:
-      - "-c"
-      - |
-        echo "restore pvs"
+            # Get the latest successful backup
+            LATEST_BACKUP=$(velero backup get --output json |
+              jq -r '.items[] | select(.status.phase == "Completed") | "\(.metadata.creationTimestamp) \(.metadata.name)"' |
+              sort -r | head -n 1 | awk '{print $2}')
+
+            echo "RESTORE: restoring $LATEST_BACKUP"
+
+            # Check if a latest backup exists and return early if not
+            if [ -z "$LATEST_BACKUP" ]; then
+              echo "RESTORE: No successful backups found."
+              exit 0
+            fi
+
+            # Initiate the restoration process
+            echo "RESTORE: restoring PVs"
+            velero restore create --wait --from-backup $LATEST_BACKUP --include-resources persistentvolumeclaims,persistentvolumes,volumesnapshots.snapshot.storage.k8s.io,volumesnapshotcontents.snapshot.storage.k8s.io,volumesnapshotclasses.snapshot.storage.k8s.io
+            echo "RESTORE: done"
