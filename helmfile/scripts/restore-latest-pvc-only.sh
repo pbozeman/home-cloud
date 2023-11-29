@@ -12,5 +12,4 @@ if [ -z "$LATEST_BACKUP" ]; then
 fi
 
 echo "Latest successful backup: $LATEST_BACKUP"
-
-velero restore create --from-backup $LATEST_BACKUP --include-resources persistentvolumeclaims,persistentvolumes
+velero restore create --from-backup $LATEST_BACKUP --include-resources persistentvolumeclaims,persistentvolumes,volumesnapshots.snapshot.storage.k8s.io,volumesnapshotcontents.snapshot.storage.k8s.io,volumesnapshotclasses.snapshot.storage.k8s.io
