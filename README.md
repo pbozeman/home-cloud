@@ -2,8 +2,9 @@
 
 ## Overview / Work in Progress
 
-My home server that was running a bunch of ad hoc VMs died. Rather than rebuilding it manually, I decided to re-create the VM environment with terraform and then bring up a
-k3s cluster for running apps.
+My home server that was running a bunch of ad hoc VMs died. Rather than rebuilding
+it manually, I decided to re-create the VM environment with terraform and then
+bring up a k3s cluster for running apps.
 
 Infra should be a single 'terraform apply' to be fully configured.
 
@@ -30,4 +31,6 @@ Currently completed:
 - K3s:
   - all the usual, prometheus, nginx-ingress, etc.
   - private docker repo
-  - Beginnings of a working k3s homeasistant with injected configs
+  - backup of stateful pv/pvc and restore on a raw cluster
+  - ephemeral home-automation stack, but with stateful vms that get restored
+    after a cluster wipe
