@@ -1,0 +1,28 @@
+deployNodeAgent: true
+features: EnableCSI
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.8.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+  - name: velero-plugin-for-csi
+    image: velero/velero-plugin-for-csi:v0.6.0
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+configuration:
+  uploaderType: kopia
+  backupStorageLocation:
+    - provider: aws
+      bucket: riposte-lance-mantrap-thrift
+      config:
+        region: default
+        s3ForcePathStyle: true
+        s3Url: https://s3.us-west-004.backblazeb2.com
+  volumeSnapshotLocation:
+    - provider: aws
+      config:
+        region: default

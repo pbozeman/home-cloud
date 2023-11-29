@@ -174,8 +174,11 @@ releases:
     namespace: velero
     chart: vmware-tanzu/velero
     version: 5.1.4
+    disableValidation: true
     secrets:
       - secrets/velero.yaml
+    values:
+      - values/velero.yaml
     hooks:
       - events: ["presync"]
         showlogs: true
