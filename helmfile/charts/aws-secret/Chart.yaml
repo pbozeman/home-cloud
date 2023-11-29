@@ -1,0 +1,4 @@
+apiVersion: v2
+name: aws-secret
+description: A Helm chart for creating an AWS secret for backups
+version: 0.1.0
