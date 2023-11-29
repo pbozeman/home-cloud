@@ -46,6 +46,11 @@ resource "null_resource" "deploy" {
 
     command = "switch"
   }
+
+  depends_on = [
+    # FIXME: cmopute the first node
+    null_resource.deploy["k3s-01"]
+  ]
 }
 
 resource "null_resource" "kubeconfig" {
