@@ -1,0 +1,42 @@
+releases:
+  #
+  # mosquitto-mqtt
+  #
+  - name: mosquitto-mqtt
+    namespace: home-automation
+    chart: ../charts/mosquitto-mqtt
+    version: 1.0.0
+    set:
+      - name: installCRDs
+        value: true
+    values:
+      - ../values/mosquitto-mqtt.yaml
+    secrets:
+      - ../secrets/mosquitto-mqtt.yaml
+
+  #
+  # zigbee2mqtt
+  #
+  - name: zigbee2mqtt
+    namespace: home-automation
+    chart: ../charts/zigbee2mqtt
+    version: 1.0.0
+    needs:
+      - home-automation/mosquitto-mqtt
+
+  #
+  # home-assistant
+  #
+  - name: home-assistant
+    namespace: home-automation
+    chart: ../charts/home-assistant
+    version: 1.0.0
+    values:
+      - ../values/home-assistant.yaml
+    secrets:
+      - ../secrets/docker-registry.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "sh"
+        args: ["../../images/home-assistant/build.sh"]

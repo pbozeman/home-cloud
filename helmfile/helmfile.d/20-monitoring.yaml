@@ -1,0 +1,28 @@
+releases:
+  # prometheus
+  #
+  # see https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+  # for cleanup
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    version: 54.1.0
+    disableValidation: true
+    values:
+      - ../values/common.yaml
+      - ../values/prometheus.yaml
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args: ["apply", "-f", "../manifests/monitoring/"]
+
+  #
+  # loki
+  #
+  - name: loki-stack
+    namespace: logging
+    chart: grafana/loki-stack
+    version: 2.9.11
+    values:
+      - ../values/loki-stack.yaml

@@ -1,0 +1,10 @@
+# TODO: restore pvc state from backup
+
+hooks:
+  - events: ["preapply"]
+    showlogs: true
+    command: "sh"
+    args:
+      - "-c"
+      - |
+        echo "restore pvs"

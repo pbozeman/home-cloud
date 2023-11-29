@@ -1,0 +1,59 @@
+#
+# Setup longhorn storage and velero backup/restore
+#
+
+releases:
+  #
+  # Longhorn Backup Secret
+  #
+  - name: longhorn-backup-secret
+    namespace: longhorn-system
+    chart: ../charts/aws-secret
+    wait: true
+    secrets:
+      - ../secrets/longhorn-backup-secret.yaml
+
+  #
+  # Longhorn
+  #
+  - name: longhorn
+    namespace: longhorn-system
+    chart: longhorn/longhorn
+    version: 1.5.3
+    wait: true
+    needs:
+      - longhorn-system/longhorn-backup-secret
+    values:
+      - ../values/longhorn.yaml
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "kubectl"
+        args:
+          [
+            "apply",
+            "-f",
+            "../manifests/longhorn/crd",
+            "-f",
+            "../manifests/longhorn/controller",
+          ]
+
+  #
+  # Velero
+  #
+  - name: velero
+    namespace: velero
+    chart: vmware-tanzu/velero
+    version: 5.1.4
+    disableValidation: true
+    needs:
+      - longhorn-system/longhorn
+    secrets:
+      - ../secrets/velero.yaml
+    values:
+      - ../values/velero.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "kubectl"
+        args: ["apply", "-f", "../manifests/velero/"]

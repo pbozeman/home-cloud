@@ -1,0 +1,66 @@
+#
+# Network: loadbalancer, certs, ingress
+#
+
+releases:
+  #
+  # metallb
+  #
+  - name: metallb
+    namespace: metallb-system
+    chart: metallb/metallb
+    version: 0.13.12
+    wait: true
+
+    # TODO: this seems so janky. this can't really be the best practice, is it?
+    hooks:
+      - events: ["postsync"]
+        showlogs: true
+        command: "sh"
+        args:
+          - "-c"
+          - |
+            kubectl wait --for=condition=available --timeout=60s deployment/metallb-controller -n metallb-system
+            kubectl apply -f ../manifests/metallb/addresspool.yaml
+
+  #
+  # cert-manager
+  #
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.7.1
+    wait: true
+    labels:
+      name: cert-manager
+    set:
+      - name: installCRDs
+        value: true
+
+  #
+  # Wildcard
+  #
+  - name: wildcard
+    namespace: ingress-nginx
+    chart: ../charts/wildcard
+    version: 0.1.0
+    disableValidation: true
+    wait: true
+    needs:
+      - cert-manager/cert-manager
+    values:
+      - ../values/common.yaml
+    secrets:
+      - ../secrets/cloudflare.yaml
+
+  #
+  # Nginx
+  #
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    createNamespace: true
+    chart: ingress-nginx/ingress-nginx
+    version: 4.8.3
+    wait: true
+    values:
+      - ../values/nginx-ingress.yaml

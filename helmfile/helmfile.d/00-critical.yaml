@@ -1,0 +1,38 @@
+#
+# Place things here that are critical to building or reloading
+# the cluster.
+#
+
+#
+# TLS Secret
+#
+# Let's not regen the lets encrypt wildcard tls secert every time
+# the cluster is wiped. Doing so can cause us to blow our 5
+# *per week* tls quota.
+#
+# Note that this block isn't mandatory. If the secret hasn't
+# been exported, it won't get loaded here.
+
+releases:
+  - name: tls-secrets
+    namespace: critical
+    chart: ../charts/nop
+    hooks:
+      - events: ["preapply", "presync"]
+        showlogs: true
+        command: "sh"
+        args:
+          - "-c"
+          - |
+            # Check if the tls file exists
+            if [ -f ../secrets/wildcard-tls.yaml ]; then
+              NS="ingress-nginx"
+
+              # create namespace, if needed
+              kubectl get namespace $NS > /dev/null 2>&1 || \
+                kubectl create namespace $NS
+
+              # create tls cert, if needed
+              kubectl get secret wildcard-blinkies.io-tls -n $NS > /dev/null 2>&1 || \
+                sops --decrypt ../secrets/wildcard-tls.yaml | kubectl apply -f -
+            fi
