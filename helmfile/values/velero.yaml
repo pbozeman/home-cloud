@@ -1,4 +1,3 @@
-deployNodeAgent: true
 features: EnableCSI
 initContainers:
   - name: velero-plugin-for-aws
@@ -14,7 +13,6 @@ initContainers:
       - mountPath: /target
         name: plugins
 configuration:
-  uploaderType: kopia
   backupStorageLocation:
     - provider: aws
       bucket: riposte-lance-mantrap-thrift

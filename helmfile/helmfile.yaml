@@ -185,6 +185,8 @@ releases:
     chart: vmware-tanzu/velero
     version: 5.1.4
     disableValidation: true
+    needs:
+      - longhorn-system/longhorn
     secrets:
       - secrets/velero.yaml
     values:
