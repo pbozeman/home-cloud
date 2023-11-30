@@ -1,7 +1,8 @@
 service:
   ui:
     type: ClusterIP
-    port: 8000
+    port: 80
+    targetPort: 8000
 defaultSettings:
   backupTarget: "s3://riposte-lance-mantrap-thrift@us-west-1/"
   backupTargetCredentialSecret: "aws-backup-secret"
