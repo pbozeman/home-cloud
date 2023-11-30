@@ -44,7 +44,6 @@ releases:
     namespace: ingress-nginx
     chart: ../charts/wildcard
     version: 0.1.0
-    disableValidation: true
     wait: true
     needs:
       - cert-manager/cert-manager

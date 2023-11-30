@@ -7,7 +7,6 @@ releases:
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
-    disableValidation: true
     values:
       - ../values/common.yaml
       - ../values/prometheus.yaml

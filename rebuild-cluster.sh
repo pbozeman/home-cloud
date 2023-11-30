@@ -19,8 +19,11 @@ main() {
 	enable_prevent_destroy
 
 	# reinstall software stack
+	# since this is the "first" install of the cluster, sync is required
+	# otherwise helmfile diff gets confused by missing crds and
+	# disableValidation was causing issues down the road.
 	cd "$top"/helmfile
-	retry "helmfile apply"
+	retry "helmfile sync"
 }
 
 cleanup() {
