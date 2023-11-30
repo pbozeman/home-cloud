@@ -56,14 +56,21 @@
 
   services.openiscsi.enable = true;
   services.openiscsi.name = "iqn.2023-21.local:${hostname}";
-
   services.k3s = {
     enable = true;
     role = "server";
     token = "FIXMEthisisnotrandom";
     clusterInit = is_first_host;
     serverAddr = if is_first_host == false then "https://${first_host}:6443" else "";
-    extraFlags = "--disable=servicelb --disable=traefik --disable=local-storage";
+    extraFlags =
+      "--disable=servicelb " +
+      "--disable=traefik " +
+      "--disable=local-storage " +
+      "--kube-apiserver-arg default-not-ready-toleration-seconds=10 " +
+      "--kube-apiserver-arg default-unreachable-toleration-seconds=10 " +
+      "--kube-controller-arg node-monitor-period=10s " +
+      "--kube-controller-arg node-monitor-grace-period=10s " +
+      "--kubelet-arg node-status-update-frequency=5s";
   };
 
   networking.firewall.allowedTCPPorts = [
