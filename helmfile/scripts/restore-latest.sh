@@ -13,4 +13,4 @@ fi
 
 echo "Latest successful backup: $LATEST_BACKUP"
 
-velero restore create --from-backup $LATEST_BACKUP
+velero restore create --wait --from-backup $LATEST_BACKUP
