@@ -20,7 +20,7 @@ releases:
 
             # Get the latest successful backup
             LATEST_BACKUP=$(velero backup get --output json |
-              jq -r '.items[] | select(.status.phase == "Completed") | "\(.metadata.creationTimestamp) \(.metadata.name)"' |
+              jq -r '.items[] | select(.status.phase == "Completed") | "\(.metadata.completionTimestamp) \(.metadata.name)"' |
               sort -r | head -n 1 | awk '{print $2}')
 
             echo "RESTORE: restoring $LATEST_BACKUP"
