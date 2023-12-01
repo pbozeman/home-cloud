@@ -40,3 +40,24 @@ releases:
         showlogs: true
         command: "sh"
         args: ["../../images/home-assistant/build.sh"]
+
+  #
+  # appdaemon
+  #
+  # I hate that ha can't programatically create users or access
+  # tokens via commands or injected config. Because of that,
+  # we have to first login and and then get an access token for
+  # them and save it into secrets/appdaemon.yaml under the
+  # key
+  #   home-assistant:
+  #     token: "<the token from ha>"
+  # then re-run helmfile apply. Without the token, this chart
+  # won't create the deployment
+  - name: appdaemon
+    namespace: home-automation
+    chart: ../charts/appdaemon
+    version: 0.1.0
+    values:
+      - ../values/appdaemon.yaml
+    secrets:
+      - ../secrets/appdaemon.yaml

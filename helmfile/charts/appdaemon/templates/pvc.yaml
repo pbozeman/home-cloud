@@ -1,0 +1,12 @@
+{{ if .Values.homeassistant.token }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: appdaemon-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+{{ end }}

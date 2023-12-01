@@ -1,0 +1,20 @@
+image:
+  repository: acockburn/appdaemon
+  tag: 4.4.2
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  port: 5050
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi
+
+homeassistant:
+  url: "https://ha.blinkies.io"
+  token: ""

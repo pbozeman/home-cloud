@@ -1,0 +1,43 @@
+{{ if .Values.homeassistant.token }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appdaemon
+  labels:
+    app: appdaemon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appdaemon
+  template:
+    metadata:
+      labels:
+        app: appdaemon
+    spec:
+      containers:
+        - name: appdaemon
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          env:
+            - name: HA_URL
+              value: "{{ .Values.homeassistant.url }}"
+            - name: TOKEN
+              value: "{{ .Values.homeassistant.token }}"
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+          ports:
+            - containerPort: 5050
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: appdaemon-pvc
+{{ end }}

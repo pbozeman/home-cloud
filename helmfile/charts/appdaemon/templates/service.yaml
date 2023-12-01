@@ -1,0 +1,13 @@
+{{ if .Values.homeassistant.token }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: appdaemon-service
+spec:
+  selector:
+    app: appdaemon
+  ports:
+    - protocol: TCP
+      port: 5050
+      targetPort: 5050
+{{ end }}
