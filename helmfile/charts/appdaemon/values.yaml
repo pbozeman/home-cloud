@@ -1,7 +1,7 @@
 image:
   repository: acockburn/appdaemon
   tag: 4.4.2
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
@@ -18,3 +18,8 @@ resources:
 homeassistant:
   url: "https://ha.blinkies.io"
   token: ""
+
+timezone: "America/Los_Angeles"
+latitude: 0
+longitude: 0
+elevation: 30

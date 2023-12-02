@@ -14,16 +14,19 @@ spec:
     metadata:
       labels:
         app: appdaemon
+      annotations:
+        # TODO: check on the best practices for pod restart on config map
+        # changes as it doesn't seem to happen by default.
+        #
+        # this triggers a pod resstart for values that are passed into the
+        # config map. It will not trigger a restart if the configmap changes
+        # structure.
+        values-hash: {{ .Values | toJson | sha256sum }}
     spec:
       containers:
         - name: appdaemon
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
-          env:
-            - name: HA_URL
-              value: "{{ .Values.homeassistant.url }}"
-            - name: TOKEN
-              value: "{{ .Values.homeassistant.token }}"
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"
@@ -34,10 +37,16 @@ spec:
           ports:
             - containerPort: 5050
           volumeMounts:
-            - name: config
+            - name: config-volume
+              mountPath: /conf/appdaemon.yaml
+              subPath: appdaemon.yaml
+            - name: persistent-storage
               mountPath: /conf
       volumes:
-        - name: config
+        - name: config-volume
+          configMap:
+            name: appdaemon-config
+        - name: persistent-storage
           persistentVolumeClaim:
             claimName: appdaemon-pvc
 {{ end }}

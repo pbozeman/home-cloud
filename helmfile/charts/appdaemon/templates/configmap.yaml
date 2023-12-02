@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appdaemon-config
+data:
+  appdaemon.yaml: |
+    appdaemon:
+      latitude: {{ .Values.latitude }}
+      longitude: {{ .Values.longitude }}
+      elevation: {{ .Values.elevation }}
+      time_zone: "{{ .Values.timezone }}"
+      cert_verify: True
+      plugins:
+        HASS:
+          type: hass
+          ha_url: "{{ .Values.homeassistant.url }}"
+          token: "{{ .Values.homeassistant.token }}"
+          cert_verify: True
+    http:
+      url: http://0.0.0.0:5050
+    admin:
+    api:
+    hadashboard:
