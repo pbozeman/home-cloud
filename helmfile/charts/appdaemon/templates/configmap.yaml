@@ -21,3 +21,15 @@ data:
     admin:
     api:
     hadashboard:
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: appdaemon-apps
+data:
+  {{- range $path, $fileContents := .Files.Glob "config-directory/apps/**" }}
+  {{ base $path }}: |
+    {{- tpl (toString $fileContents) $ | nindent 4 }}
+  {{- end }}

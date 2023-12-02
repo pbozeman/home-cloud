@@ -37,12 +37,17 @@ spec:
           ports:
             - containerPort: 5050
           volumeMounts:
+            - name: apps-volume
+              mountPath: /conf/apps
             - name: config-volume
               mountPath: /conf/appdaemon.yaml
               subPath: appdaemon.yaml
             - name: persistent-storage
               mountPath: /conf
       volumes:
+        - name: apps-volume
+          configMap:
+            name: appdaemon-apps
         - name: config-volume
           configMap:
             name: appdaemon-config
