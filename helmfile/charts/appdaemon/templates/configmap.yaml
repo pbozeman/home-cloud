@@ -23,7 +23,10 @@ data:
     hadashboard:
 
 ---
-
+# TODO: decide if this should keep pulling in the app files
+# via a configmap. AppDaemon will reload apps on change, so
+# a kubectl cp might be easier, especially if subdirectors
+# start getting created.
 apiVersion: v1
 kind: ConfigMap
 metadata:
