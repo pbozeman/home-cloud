@@ -1,22 +1,19 @@
-import appdaemon.plugins.hass.hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass  # type: ignore
 
 
 class MotionLight(hass.Hass):
     def initialize(self):
-        if not "light" in self.args:
+        self.light = self.args.get("light", None)
+        self.sensors = self.args.get("sensors", [])
+        self.motion_off_delay_sec = self.args.get("delay_sec", 5)
+
+        if not self.light:
             self.log("no light specified")
             return
-        self.light = self.args["light"]
 
-        if not "sensors" in self.args:
+        if not self.sensors:
             self.log("no sensors specified")
             return
-        self.sensors = self.args["sensors"]
-
-        if "delay_sec" in self.args:
-            self.motion_off_delay_sec = self.args["delay_sec"]
-        else:
-            self.motion_off_delay_sec = 5
 
         self.log("init")
 
@@ -24,7 +21,7 @@ class MotionLight(hass.Hass):
         self.disabled = False
 
         # if we restart while the light is on, we still want the
-        # ability to turn it off
+        # to turn it off on no motion
         if self.get_state(self.light) == "on" and not self.disabled:
             self.set_off_timer()
 
