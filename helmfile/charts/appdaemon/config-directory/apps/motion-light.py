@@ -7,18 +7,22 @@ class MotionLight(hass.Hass):
         self.entity = self.args.get("entity", None)
         self.sensors = self.args.get("sensors", [])
 
-        # optional night mode settings.
-        # it is assumed, but not checked, that the night mode entity
-        # is a subset of entity. (or a scene that also truns on some subset
-        # of entity).
+        # optional day/night mode settings.
         #
-        # It is the entity that will be checked for "on" and will be turned
-        # off, even during night mode.  night_mode_entity will be the one turned
-        # on.
+        # entity is the thing that will get checked to see if is on. It is what
+        # will get turned off.  It is expected to be a light or group.
+        #
+        # The day mode entity is the thing that will get "turned on." i.e.
+        # if "entity" is "off" the day mode entity will be turned on.  This
+        # allows it to be a scene, yet still check to see if one or more of the
+        # lights it turns on are already on.
+        #
+        # The night_mode_entity works the same way.
+        self.day_mode_entity = self.args.get("day_mode_entity", self.entity)
+        self.night_mode_entity = self.args.get("night_mode_entity", self.entity)
         self.night_mode_boolean = self.args.get(
             "night_mode_boolean", "input_boolean.goodnight_mode"
         )
-        self.night_mode_entity = self.args.get("night_mode_entity", None)
 
         # misc settings
         self.motion_off_delay_sec = self.args.get("delay_sec", 5)
@@ -49,10 +53,11 @@ class MotionLight(hass.Hass):
     def motion_recent(self, entity, attribute, old, new, kwargs):
         self.log(
             "motion_recent"
-            + f" state: {self.get_state(self.entity)}"
-            + f" need_illumination: {self.need_illumination()}"
-            + f" turn_on_enabled: {self.turn_on_enabled}"
-            + f" entity_to_turn_on: {self.entity_to_turn_on()}"
+            + f" state: '{self.get_state(self.entity)}'"
+            + f" need_illumination: '{self.need_illumination()}'"
+            + f" turn_on_enabled: '{self.turn_on_enabled}'"
+            + f" is_night_mode: '{self.is_night_mode()}'"
+            + f" entity_to_turn_on: '{self.entity_to_turn_on()}'"
         )
 
         # we do this before the illumination and turn_on_enabled checks,
@@ -81,14 +86,14 @@ class MotionLight(hass.Hass):
     def need_illumination(self):
         return self.sun_up()
 
+    def is_night_mode(self):
+        return self.get_state(self.night_mode_boolean) == "on"
+
     def entity_to_turn_on(self):
-        if not self.get_state(self.night_mode_boolean):
-            return self.entity
-
-        if self.night_mode_entity:
+        if self.is_night_mode():
             return self.night_mode_entity
-
-        return self.entity
+        else:
+            return self.day_mode_entity
 
     def set_off_timer(self):
         self.log("set_off_timer")
