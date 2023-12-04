@@ -1,4 +1,4 @@
-import appdaemon.plugins.hass.hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass  # type: ignore
 
 
 class LightGroupAll(hass.Hass):
