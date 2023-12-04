@@ -9,6 +9,6 @@ light_group_all:
 motion_light:
   module: motion-light
   class: MotionLight
-  entity: input_boolean.fakelight
+  entity: input_boolean.fake_light
+  night_mode_entity: input_boolean.fake_night_light
   sensors: [input_boolean.fakemotion]
-  turn_on: false
