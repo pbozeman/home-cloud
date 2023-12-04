@@ -1,3 +1,9 @@
-light-group-all:
+light_group_all:
   module: light-group
   class: LightGroupAll
+
+motion_light:
+  module: motion-light
+  class: MotionLight
+  light: input_boolean.fakelight
+  sensors: [input_boolean.fakemotion]

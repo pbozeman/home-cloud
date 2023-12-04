@@ -22,6 +22,7 @@ spec:
         # config map. It will not trigger a restart if the configmap changes
         # structure.
         values-hash: {{ .Values | toJson | sha256sum }}
+        checksum/apps: {{ (.Files.Glob "config-directory/apps/**").AsConfig | sha256sum }}
     spec:
       containers:
         - name: appdaemon
