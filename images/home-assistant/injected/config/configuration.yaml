@@ -19,3 +19,9 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 group:
+
+input_boolean:
+  goodnight_mode:
+    name: Goodnight Mode
+    initial: off
+    icon: mdi:toggle-switch

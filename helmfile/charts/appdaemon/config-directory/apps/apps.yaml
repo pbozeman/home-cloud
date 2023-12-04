@@ -1,3 +1,7 @@
+goodnight:
+  module: goodnight
+  class: Goodnight
+
 light_group_all:
   module: light-group
   class: LightGroupAll
