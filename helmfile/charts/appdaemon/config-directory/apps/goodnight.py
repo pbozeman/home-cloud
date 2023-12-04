@@ -1,4 +1,4 @@
-import appdaemon.plugins.hass.hassapi as hass
+import appdaemon.plugins.hass.hassapi as hass  # type: ignore
 import datetime
 
 
@@ -14,20 +14,30 @@ class Goodnight(hass.Hass):
         time_to_run = datetime.time(hour, minute)
         self.run_daily(self.goodnight, time_to_run)
 
-        # and check if we need to turn it on now, possibly because
-        # we were down and will miss the alarm
-        now = self.datetime()
+        # turn off goodnight mode at sunrise
+        self.run_at_sunrise(self.wakeup)
 
-        self.log(f"goodnight now: {now} ttr: {time_to_run} sunrise: {self.sunrise()}")
+        # if we were offline when we should have transitioned, it will be
+        # in the wrong state. explicitly set it now.
+        now_time = self.datetime().time()
+        sunrise_time = self.sunrise().time()
 
-        if now.time() > time_to_run or now < self.sunrise():
+        self.log(
+            f"goodnight now: {now_time} "
+            + f"time_to_run: {time_to_run} "
+            + f"sunrise: {sunrise_time}"
+        )
+
+        if now_time > time_to_run or now_time < sunrise_time:
             self.log("goodnight mode ON during init")
             self.call_service(
                 "input_boolean/turn_on", entity_id="input_boolean.goodnight_mode"
             )
-
-        # turn off goodnight mode at sunrise
-        self.run_at_sunrise(self.wakeup)
+        else:
+            self.log("goodnight mode OFF during init")
+            self.call_service(
+                "input_boolean/turn_off", entity_id="input_boolean.goodnight_mode"
+            )
 
     def goodnight(self, kwargs):
         self.log("goodnight mode ON")
