@@ -3,12 +3,15 @@ import appdaemon.plugins.hass.hassapi as hass  # type: ignore
 
 class MotionLight(hass.Hass):
     def initialize(self):
-        self.light = self.args.get("light", None)
+        self.entity = self.args.get("entity", None)
         self.sensors = self.args.get("sensors", [])
-        self.motion_off_delay_sec = self.args.get("delay_sec", 5)
 
-        if not self.light:
-            self.log("no light specified")
+        self.motion_off_delay_sec = self.args.get("delay_sec", 5)
+        self.turn_on_enabled = self.args.get("turn_on", True)
+        self.turn_off_enabled = self.args.get("turn_off", True)
+
+        if not self.entity:
+            self.log("no entity specified")
             return
 
         if not self.sensors:
@@ -22,11 +25,11 @@ class MotionLight(hass.Hass):
 
         # if we restart while the light is on, we still want the
         # to turn it off on no motion
-        if self.get_state(self.light) == "on" and not self.disabled:
+        if self.get_state(self.entity) == "on" and not self.disabled:
             self.set_off_timer()
 
         self.listen_state(self.motion_recent, self.sensors, new="on")
-        self.listen_state(self.light_on, self.light, new="on")
+        self.listen_state(self.entity_on, self.entity, new="on")
 
     def motion_recent(self, entity, attribute, old, new, kwargs):
         self.log("motion_recent")
@@ -35,10 +38,14 @@ class MotionLight(hass.Hass):
             self.log("disabled")
             return
 
-        # we do this before the illumination check, because we always
-        # want to be refreshing the timer and turing off the light in case
-        # it got turned on manually
+        # we do this before the illumination and turn_on_enabled checks,
+        # because regardless of their policy, we want to (potentially)
+        # turn off the light after a lack of motion
         self.set_off_timer()
+
+        if not self.turn_on_enabled:
+            self.log("turn_on false")
+            return
 
         if self.need_illumination() == False:
             self.log("illumination not needed")
@@ -46,21 +53,21 @@ class MotionLight(hass.Hass):
 
         # if this is a group, specific lights might already be manually
         # set. do not turn them all on.
-        if self.get_state(self.light) == "on":
+        if self.get_state(self.entity) == "on":
             self.log("already on")
             return
 
-        self.log(f"turn on {self.light}")
-        self.turn_on(self.light)
+        self.log(f"turn on {self.entity}")
+        self.turn_on(self.entity)
 
-    def light_on(self, entity, attribute, old, new, kwargs):
-        self.log("light_on")
+    def entity_on(self, entity, attribute, old, new, kwargs):
+        self.log("entity_on")
 
         if self.disabled:
             self.log("disabled")
             return
 
-        self.log("light_on")
+        # kick off the timer when manually turned on too
         self.set_off_timer()
 
     def need_illumination(self):
@@ -80,7 +87,12 @@ class MotionLight(hass.Hass):
     def turn_off_light(self, kwargs):
         self.log("turn_off_light")
         self.run_in_handle = None
-        self.turn_off(self.light)
+
+        if not self.turn_off_enabled:
+            self.log("turn_off false")
+            return
+
+        self.turn_off(self.entity)
 
     def enable(self):
         self.disabled = False
@@ -89,4 +101,4 @@ class MotionLight(hass.Hass):
         self.disabled = True
 
     def log(self, str):
-        super().log(f"MotionLight {self.light} {str}")
+        super().log(f"MotionLight {self.entity} {str}")
