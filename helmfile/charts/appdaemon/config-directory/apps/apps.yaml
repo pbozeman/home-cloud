@@ -10,6 +10,5 @@ motion_light:
   module: motion-light
   class: MotionLight
   entity: input_boolean.fake_light
-  day_mode_entity: scene.test_scene
   night_mode_entity: input_boolean.fake_night_light
   sensors: [input_boolean.fakemotion]
