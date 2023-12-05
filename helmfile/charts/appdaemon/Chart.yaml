@@ -2,4 +2,4 @@ apiVersion: v2
 name: appdaemon
 description: A Helm chart for Appdaemon on Kubernetes
 type: application
-version: 0.1.0
+version: 1.0.0

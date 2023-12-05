@@ -2,32 +2,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: appdaemon
+  name: "{{ .Chart.Name }}"
   labels:
-    app: appdaemon
+    app: "{{ .Chart.Name }}"
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: appdaemon
+      app: "{{ .Chart.Name }}"
   template:
     metadata:
       labels:
-        app: appdaemon
+        app: "{{ .Chart.Name }}"
       annotations:
-        # TODO: check on the best practices for pod restart on config map
-        # changes as it doesn't seem to happen by default.
-        #
-        # this triggers a pod resstart for values that are passed into the
-        # config map. It will not trigger a restart if the configmap changes
-        # structure.
-        values-hash: {{ .Values | toJson | sha256sum }}
         checksum/apps: {{ (.Files.Glob "config-directory/apps/**").AsConfig | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: appdaemon
+        - name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           resources:
@@ -38,7 +32,7 @@ spec:
               memory: "{{ .Values.resources.limits.memory }}"
               cpu: "{{ .Values.resources.limits.cpu }}"
           ports:
-            - containerPort: 5050
+            - containerPort: {{ .Values.container.port }}
           volumeMounts:
             - name: apps-volume
               mountPath: /conf/apps
@@ -50,11 +44,12 @@ spec:
       volumes:
         - name: apps-volume
           configMap:
-            name: appdaemon-apps
+            name: "{{ .Chart.Name }}-apps"
         - name: config-volume
           configMap:
-            name: appdaemon-config
+            name: "{{ .Chart.Name }}-config"
         - name: persistent-storage
           persistentVolumeClaim:
             claimName: appdaemon-pvc
+            claimName: "{{ .Chart.Name }}-pvc"
 {{ end }}

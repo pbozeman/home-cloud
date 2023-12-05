@@ -2,11 +2,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: appdaemon-pvc
+  name: "{{ .Chart.Name }}-pvc"
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.persistence.size }}
+  storageClassName: longhorn
 {{ end }}

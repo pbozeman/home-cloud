@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: appdaemon-config
+  name: "{{ .Chart.Name }}-config"
 data:
   appdaemon.yaml: |
     appdaemon:
@@ -15,9 +15,9 @@ data:
           type: hass
           ha_url: "{{ .Values.homeassistant.url }}"
           token: "{{ .Values.homeassistant.token }}"
-          cert_verify: True
+          cert_verify: False
     http:
-      url: http://0.0.0.0:5050
+      url: http://0.0.0.0:{{ .Values.container.port }}
     admin:
     api:
     hadashboard:
@@ -26,7 +26,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: appdaemon-apps
+  name: "{{ .Chart.Name }}-apps"
 data:
   {{- range $path, $fileContents := .Files.Glob "config-directory/apps/**" }}
   {{ base $path }}: |

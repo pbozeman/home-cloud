@@ -3,9 +3,16 @@ image:
   tag: 4.4.2
   pullPolicy: IfNotPresent
 
+container:
+  port: 5050
+
 service:
   type: ClusterIP
+  targetPort: 5050
   port: 5050
+
+persistence:
+  size: 1Gi
 
 resources:
   limits:
@@ -16,7 +23,7 @@ resources:
     memory: 512Mi
 
 homeassistant:
-  url: "https://ha.blinkies.io"
+  url: "http://home-assistant:8123"
   token: ""
 
 timezone: "America/Los_Angeles"

@@ -49,8 +49,6 @@ releases:
   - name: appdaemon
     namespace: home-automation
     chart: ../charts/appdaemon
-    version: 0.1.0
-    values:
-      - ../values/appdaemon.yaml
+    version: 1.0.0
     secrets:
       - ../secrets/appdaemon.yaml
