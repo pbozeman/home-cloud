@@ -57,6 +57,17 @@
 
   services.openiscsi.enable = true;
   services.openiscsi.name = "iqn.2023-21.local:${hostname}";
+  
+  # add the following flags to test failover.  A properly designed
+  # service shouldn't be a singleton, and the defaults are fine in
+  # such cases, but things like homeassistant will need to be killed
+  # more quickly for failover.  More aggressive settings seemed to be 
+  # causing issues for longhorn though.
+  #      "--kube-apiserver-arg default-not-ready-toleration-seconds=10 " +
+  #      "--kube-apiserver-arg default-unreachable-toleration-seconds=10 " +
+  #      "--kube-controller-arg node-monitor-period=10s " +
+  #      "--kube-controller-arg node-monitor-grace-period=10s " +
+  #      "--kubelet-arg node-status-update-frequency=5s";
   services.k3s = {
     enable = true;
     role = "server";
@@ -66,12 +77,7 @@
     extraFlags =
       "--disable=servicelb " +
       "--disable=traefik " +
-      "--disable=local-storage " +
-      "--kube-apiserver-arg default-not-ready-toleration-seconds=10 " +
-      "--kube-apiserver-arg default-unreachable-toleration-seconds=10 " +
-      "--kube-controller-arg node-monitor-period=10s " +
-      "--kube-controller-arg node-monitor-grace-period=10s " +
-      "--kubelet-arg node-status-update-frequency=5s";
+      "--disable=local-storage";
   };
 
   networking.firewall.allowedTCPPorts = [
