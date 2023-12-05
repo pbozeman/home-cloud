@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         app: home-assistant
+      annotations:
+        checksum/config:
+          {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
         - name: home-assistant
@@ -28,9 +31,15 @@ spec:
           ports:
             - containerPort: 8123
           volumeMounts:
-            - name: config
+            - name: persistent-storage
               mountPath: /config
+            - name: config-volume
+              mountPath: /config/configuration.yaml
+              subPath: configuration.yaml
       volumes:
-        - name: config
+        - name: persistent-storage
           persistentVolumeClaim:
             claimName: home-assistant-pvc
+        - name: config-volume
+          configMap:
+            name: homeassistant-config

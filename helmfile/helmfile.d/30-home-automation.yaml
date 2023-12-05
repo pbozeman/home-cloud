@@ -33,13 +33,6 @@ releases:
     version: 1.0.0
     values:
       - ../values/home-assistant.yaml
-    secrets:
-      - ../secrets/docker-registry.yaml
-    hooks:
-      - events: ["presync"]
-        showlogs: true
-        command: "sh"
-        args: ["../../images/home-assistant/build.sh"]
 
   #
   # appdaemon
