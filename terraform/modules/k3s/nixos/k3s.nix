@@ -5,6 +5,7 @@
   hostname,
   is_first_host,
   first_host,
+  k3s_token,
   ... }: {
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -59,7 +60,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    token = "FIXMEthisisnotrandom";
+    token = "${k3s_token}";
     clusterInit = is_first_host;
     serverAddr = if is_first_host == false then "https://${first_host}:6443" else "";
     extraFlags =

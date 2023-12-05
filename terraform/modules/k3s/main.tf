@@ -2,10 +2,21 @@ locals {
   flake_path = "./${path.module}/nixos"
 }
 
+resource "random_string" "k3s_token" {
+  length  = 32
+  lower   = true
+  numeric = true
+  upper   = true
+}
+
 resource "local_file" "flake" {
-  content         = templatefile("${local.flake_path}/flake.tftpl", { hosts = keys(var.k3s_nodes) })
+  content = templatefile("${local.flake_path}/flake.tftpl", {
+    hosts     = keys(var.k3s_nodes)
+    k3s_token = random_string.k3s_token.result
+  })
+
   filename        = "${local.flake_path}/flake.nix"
-  file_permission = "644"
+  file_permission = "600"
 }
 
 data "external" "instantiate" {
