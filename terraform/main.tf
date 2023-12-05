@@ -90,6 +90,8 @@ module "vms" {
 module "k3s" {
   source = "./modules/k3s"
 
+  vm_ids = module.vms.ids
+
   k3s_nodes = var.nixos_k3s_vms
   k3s_name  = "k3s.${var.domain_name}"
 }

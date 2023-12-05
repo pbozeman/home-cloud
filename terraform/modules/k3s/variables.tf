@@ -1,3 +1,7 @@
+variable "vm_ids" {
+  type = list(number)
+}
+
 variable "k3s_name" {
   type = string
 }

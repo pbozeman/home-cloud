@@ -127,3 +127,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     EOF
   }
 }
+
+output "ids" {
+  value = [for v in values(proxmox_virtual_environment_vm.nixos_vms) : v.id]
+}
