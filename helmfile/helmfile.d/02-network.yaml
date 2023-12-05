@@ -12,7 +12,7 @@ releases:
     version: 0.13.12
     wait: true
 
-    # TODO: this seems so janky. this can't really be the best practice, is it?
+    # this seems so janky. this can't really be the best practice, is it?
     hooks:
       - events: ["postsync"]
         showlogs: true
