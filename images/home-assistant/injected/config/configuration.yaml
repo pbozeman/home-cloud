@@ -25,3 +25,13 @@ input_boolean:
     name: Goodnight Mode
     initial: off
     icon: mdi:toggle-switch
+
+  fake_light:
+    name: Fake Light
+    initial: off
+    icon: mdi:lightbulb
+
+  fake_night_light:
+    name: Fake Night Light
+    initial: off
+    icon: mdi:lightbulb
