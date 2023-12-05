@@ -6,6 +6,5 @@ service:
 defaultSettings:
   backupTarget: "s3://riposte-lance-mantrap-thrift@us-west-1/"
   backupTargetCredentialSecret: "aws-backup-secret"
-  backupTargetPollInterval: "5m"
-  nodeDownPodDeletionPolicy: DeleteBothStatefulsetAndDeploymentPod
-  nodeDrainPolicy: AlwaysAllow
+  nodeDownPodDeletionPolicy: "delete-both-statefulset-and-deployment-pod"
+  nodeDrainPolicy: "always-allow"
