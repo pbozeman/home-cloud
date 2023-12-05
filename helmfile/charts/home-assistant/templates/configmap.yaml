@@ -28,6 +28,11 @@ data:
         initial: off
         icon: mdi:toggle-switch
 
+      fake_motion:
+        name: Fake Motion
+        initial: off
+        icon: mdi:motion-sensor
+
       fake_light:
         name: Fake Light
         initial: off

@@ -11,4 +11,4 @@ motion_light:
   class: MotionLight
   entity: input_boolean.fake_light
   night_mode_entity: input_boolean.fake_night_light
-  sensors: [input_boolean.fakemotion]
+  sensors: [input_boolean.fake_motion]
