@@ -9,10 +9,6 @@ releases:
     set:
       - name: installCRDs
         value: true
-    values:
-      - ../values/mosquitto-mqtt.yaml
-    secrets:
-      - ../secrets/mosquitto-mqtt.yaml
 
   #
   # zigbee2mqtt

@@ -1,15 +1,15 @@
-replicaCount: 1
 image:
   repository: eclipse-mosquitto
   pullPolicy: IfNotPresent
   tag: "latest"
-service:
+
+container:
   port: 1883
-persistence:
-  enabled: true
-  storageClassName: longhorn
-  accessMode: ReadWriteOnce
-  size: 100Mi
+
+service:
+  type: ClusterIP
+  port: 1883
+
 resources:
   limits:
     cpu: "1"

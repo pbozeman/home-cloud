@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mosquitto-mqtt
+  name: "{{ .Chart.Name }}"
   labels:
-    app: moquitto-mqtt
+    app: "{{ .Chart.Name }}"
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: mosquitto-mqtt
+      app: "{{ .Chart.Name }}"
   template:
     metadata:
       labels:
-        app: mosquitto-mqtt
+        app: "{{ .Chart.Name }}"
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: mosquitto-mqtt
+        - name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           resources:
@@ -29,20 +31,12 @@ spec:
               cpu: "{{ .Values.resources.limits.cpu }}"
           ports:
             - name: mqtt
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.container.port }}
           volumeMounts:
-            - name: config
+            - name: config-volume
               mountPath: /mosquitto/config/mosquitto.conf
               subPath: mosquitto.conf
-              readOnly: true
-            - name: secrets
-              mountPath: /mosquitto/config/passwords.conf
-              subPath: passwords.conf
-              readOnly: true
       volumes:
-        - name: config
+        - name: config-volume
           configMap:
-            name: mosquitto-mqtt
-        - name: secrets
-          secret:
-            secretName: mosquitto-mqtt
+            name: "{{ .Chart.Name }}-config"
