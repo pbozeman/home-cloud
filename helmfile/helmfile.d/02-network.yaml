@@ -47,9 +47,8 @@ releases:
     wait: true
     needs:
       - cert-manager/cert-manager
-    values:
-      - ../values/common.yaml
     secrets:
+      - ../secrets/common.yaml
       - ../secrets/cloudflare.yaml
 
   #
