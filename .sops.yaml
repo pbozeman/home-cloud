@@ -7,3 +7,8 @@ creation_rules:
       - age:
           - *pbozeman-dev
           - *pbozeman-mba
+  - path_regex: terraform/secret.tfvars
+    key_groups:
+      - age:
+          - *pbozeman-dev
+          - *pbozeman-mba

@@ -15,7 +15,7 @@ main() {
 	scripts/taint-k3s.sh
 
 	disable_prevent_destroy
-	retry "terraform apply -auto-approve"
+	retry "scripts/terraform_sops.sh apply -auto-approve"
 	enable_prevent_destroy
 
 	# reinstall software stack
