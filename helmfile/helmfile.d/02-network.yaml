@@ -62,3 +62,5 @@ releases:
     wait: true
     values:
       - ../values/nginx-ingress.yaml
+    secrets:
+      - ../secrets/nginx-ingress.yaml

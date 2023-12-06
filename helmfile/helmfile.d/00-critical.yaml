@@ -24,6 +24,9 @@ releases:
         args:
           - "-c"
           - |
+            # I couldn't get helm-secrets to work at the top level of the helmfile
+            DOMAIN=$(sops --decrypt ../secrets/common.yaml | grep 'domainname:' | awk '{print $2}')
+
             # Check if the tls file exists
             if [ -f ../secrets/wildcard-tls.yaml ]; then
               NS="ingress-nginx"
@@ -33,6 +36,6 @@ releases:
                 kubectl create namespace $NS
 
               # create tls cert, if needed
-              kubectl get secret wildcard-blinkies.io-tls -n $NS > /dev/null 2>&1 || \
+              kubectl get secret wildcard-$DOMAIN-tls -n $NS > /dev/null 2>&1 || \
                 sops --decrypt ../secrets/wildcard-tls.yaml | kubectl apply -f -
             fi
