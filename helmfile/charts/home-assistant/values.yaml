@@ -3,14 +3,14 @@ image:
   tag: stable
   pullPolicy: IfNotPresent
 
+container:
+  port: 8123
+
 service:
   type: ClusterIP
   port: 8123
 
 persistence:
-  enabled: true
-  storageClassName: longhorn
-  accessMode: ReadWriteOnce
   size: 5Gi
 
 resources:
@@ -20,3 +20,11 @@ resources:
   requests:
     cpu: "500m"
     memory: 512Mi
+
+configuration:
+  trusted_proxies:
+    - 10.42.0.0/16
+  include_fakes: true
+
+domain: .home.arpa
+hostname: ha

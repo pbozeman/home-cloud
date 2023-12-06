@@ -1,17 +1,16 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: homeassistant-config
+  name: "{{ .Chart.Name }}-config"
 data:
+  # TODO: pass in lat/long here
   configuration.yaml: |
     # Loads default set of integrations. Do not remove.
     default_config:
 
-    # TODO: pass this in
     http:
       use_x_forwarded_for: true
-      trusted_proxies:
-        - 10.42.0.0/16
+      trusted_proxies: {{ .Values.configuration.trusted_proxies }}
 
     # Load frontend themes from the themes folder
     frontend:
@@ -28,6 +27,7 @@ data:
         initial: off
         icon: mdi:toggle-switch
 
+      {{ if .Values.configuration.include_fakes }}
       fake_motion:
         name: Fake Motion
         initial: off
@@ -42,3 +42,4 @@ data:
         name: Fake Night Light
         initial: off
         icon: mdi:lightbulb
+      {{ end }}

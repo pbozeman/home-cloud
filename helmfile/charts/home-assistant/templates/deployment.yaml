@@ -1,26 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: home-assistant
+  name: "{{ .Chart.Name }}"
   labels:
-    app: home-assistant
+    app: "{{ .Chart.Name }}"
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: home-assistant
+      app: "{{ .Chart.Name }}"
   template:
     metadata:
       labels:
-        app: home-assistant
+        app: "{{ .Chart.Name }}"
       annotations:
-        checksum/config:
-          {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
     spec:
       containers:
-        - name: home-assistant
+        - name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           resources:
@@ -31,7 +30,7 @@ spec:
               memory: "{{ .Values.resources.limits.memory }}"
               cpu: "{{ .Values.resources.limits.cpu }}"
           ports:
-            - containerPort: 8123
+            - containerPort: {{ .Values.container.port }}
           volumeMounts:
             - name: persistent-storage
               mountPath: /config
@@ -39,9 +38,9 @@ spec:
               mountPath: /config/configuration.yaml
               subPath: configuration.yaml
       volumes:
-        - name: persistent-storage
-          persistentVolumeClaim:
-            claimName: home-assistant-pvc
         - name: config-volume
           configMap:
-            name: homeassistant-config
+            name: "{{ .Chart.Name }}-config"
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: "{{ .Chart.Name }}-pvc"
