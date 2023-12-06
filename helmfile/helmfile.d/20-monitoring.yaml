@@ -8,8 +8,9 @@ releases:
     chart: prometheus-community/kube-prometheus-stack
     version: 54.1.0
     values:
-      - ../values/common.yaml
       - ../values/prometheus.yaml
+    secrets:
+      - ../secrets/prometheus.yaml
     hooks:
       - events: ["postsync"]
         showlogs: true

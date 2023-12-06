@@ -6,7 +6,7 @@ data:
     - name: Loki
       type: loki
       uid: loki
-      url: https://loki.blinkies.io
+      url: http://loki-stack.logging.svc.cluster.local:3100
       access: proxy
       isDefault: false
 kind: ConfigMap

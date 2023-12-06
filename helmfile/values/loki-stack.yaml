@@ -5,16 +5,5 @@ loki:
     size: 10Gi
   service:
     type: ClusterIP
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    hosts:
-      - host: loki.blinkies.io
-        paths: ["/"]
-    tls:
-      - secretName: loki-tls # If you're using TLS
-        hosts:
-          - loki.blinkies.io
 grafana:
   enabled: false
