@@ -3,15 +3,16 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-persistence:
-  enabled: true
-  storageClassName: longhorn
-  accessMode: ReadWriteOnce
-  size: 100Mi
+container:
+  port: 8080
 
-#service:
-#  type: ClusterIP
-# port: 8123
+service:
+  type: ClusterIP
+  targetPort: 8080
+  port: 8080
+
+persistence:
+  size: 100Mi
 
 resources:
   limits:
@@ -20,3 +21,9 @@ resources:
   requests:
     cpu: "500m"
     memory: 512Mi
+
+mqtt_server: "mqtt://mosquitto-mqtt:1883"
+serial_port: "/dev/ttyACM0"
+
+domain: .home.arpa
+hostname: zigbee2mqtt

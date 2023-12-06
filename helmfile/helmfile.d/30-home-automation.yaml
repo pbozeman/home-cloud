@@ -19,6 +19,10 @@ releases:
     version: 1.0.0
     needs:
       - home-automation/mosquitto-mqtt
+    values:
+      - ../values/zigbee2mqtt.conf
+    secrets:
+      - ../secrets/common.yaml
 
   #
   # home-assistant

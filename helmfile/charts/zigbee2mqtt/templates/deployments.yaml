@@ -4,21 +4,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: zigbee2mqtt
+  name: "{{ .Chart.Name }}"
   labels:
-    app: zigbee2mqtt
+    app: "{{ .Chart.Name }}"
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: zigbee2mqtt
+      app: "{{ .Chart.Name }}"
   template:
     metadata:
       labels:
-        app: zigbee2mqtt
+        app: "{{ .Chart.Name }}"
     spec:
       containers:
-        - name: zigbee2mqtt
+        - name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           resources:
@@ -29,23 +31,21 @@ spec:
               memory: "{{ .Values.resources.limits.memory }}"
               cpu: "{{ .Values.resources.limits.cpu }}"
           ports:
-            - containerPort: 8080
+            - containerPort: {{ .Values.container.port }}
           env:
             # https://github.com/Koenkk/zigbee2mqtt/discussions/13584
-            # TODO: the mqtt device needs a static ip back in terraform.
-            # Both IPs below should be passed in via config
             - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
-              value: "mqtt://192.168.10.51:1883"
+              value: "{{ .Values.mqtt_server }}"
             - name: ZIGBEE2MQTT_CONFIG_HOMEASSISTANT
               value: "true"
             - name: ZIGBEE2MQTT_CONFIG_PERMIT_JOIN
               value: "false"
             - name: ZIGBEE2MQTT_CONFIG_SERIAL_PORT
-              value: "tcp://192.168.10.178:6638"
+              value: "{{ .Values.serial_port }}"
           volumeMounts:
-            - name: zigbee2mqtt-data
+            - name: persistent-storage
               mountPath: /app/data
       volumes:
-        - name: zigbee2mqtt-data
+        - name: persistent-storage
           persistentVolumeClaim:
-            claimName: zigbee2mqtt-pvc
+            claimName: "{{ .Chart.Name }}-pvc"
