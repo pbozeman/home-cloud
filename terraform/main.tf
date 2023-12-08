@@ -4,10 +4,12 @@ locals {
       ip = var.cloudkey_01_ip
     }
   }
+
   host_dns = merge(
     local.cloudkey_host,
     var.pve_nodes,
     var.nixos_dev_vms,
+    var.nixos_nas_vms,
     var.nixos_k3s_vms,
     var.k3s_services,
   )
@@ -16,7 +18,6 @@ locals {
     pve = [for node in var.pve_nodes : node.ip]
     k3s = [for node in var.nixos_k3s_vms : node.ip]
   }
-
 }
 
 # DNS name for the physical servers and appliances
@@ -103,6 +104,33 @@ module "vms_dev" {
 
   nixos_username = var.nixos_username
   nixos_password = var.nixos_password
+}
+
+# nas vms
+module "vms_nas" {
+  source = "./modules/vms_nixos"
+
+  pve_nodes = var.pve_nodes
+
+  ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
+
+  nixos_vms = var.nixos_nas_vms
+
+  ssh_pubkeys = var.ssh_pubkeys
+
+  proxmox_password = var.proxmox_password
+
+  ubuntu_username = var.ubuntu_username
+  ubuntu_password = var.ubuntu_password
+
+  nixos_username = var.nixos_username
+  nixos_password = var.nixos_password
+}
+
+module "nas" {
+  source    = "./modules/nas"
+  vm_ids    = module.vms_nas.ids
+  nas_nodes = var.nixos_nas_vms
 }
 
 # k3s vms
