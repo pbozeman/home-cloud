@@ -88,6 +88,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     ignore_changes = [
       clone,
       disk,
+      started,
     ]
     prevent_destroy = true
   }

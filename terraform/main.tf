@@ -84,6 +84,27 @@ module "vms_ubuntu" {
   nixos_password = var.nixos_password
 }
 
+# dev vms
+module "vms_dev" {
+  source = "./modules/vms_nixos"
+
+  pve_nodes = var.pve_nodes
+
+  ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
+
+  nixos_vms = var.nixos_dev_vms
+
+  ssh_pubkeys = var.ssh_pubkeys
+
+  proxmox_password = var.proxmox_password
+
+  ubuntu_username = var.ubuntu_username
+  ubuntu_password = var.ubuntu_password
+
+  nixos_username = var.nixos_username
+  nixos_password = var.nixos_password
+}
+
 # k3s vms
 module "vms_k3s" {
   source = "./modules/vms_nixos"
