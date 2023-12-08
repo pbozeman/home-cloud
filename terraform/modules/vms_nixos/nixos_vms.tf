@@ -38,10 +38,6 @@ resource "proxmox_virtual_environment_file" "nixos_cloud_config_vendor" {
   }
 }
 
-# FIXME: it was a bad idea to merge all the vms together.
-# Specifically, the dev vm needs to be kept searpate so that low level
-# changes can be made to the vms without recreating the dev vm.
-# Undo this generalization.
 resource "proxmox_virtual_environment_vm" "nixos_vms" {
   for_each = var.nixos_vms
 
@@ -57,7 +53,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
   }
 
   clone {
-    vm_id = proxmox_virtual_environment_vm.ubuntu_vm_template[each.value.pve_node].vm_id
+    vm_id = var.ubuntu_vm_template_ids[each.value.pve_node]
   }
 
   cpu {

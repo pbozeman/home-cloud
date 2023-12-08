@@ -68,11 +68,29 @@ module "proxmox" {
   proxmox_ssh_pubkey  = var.proxmox_ssh_pubkey
 }
 
-# FIXME: reintroduce dev vm. It used to be here. See comment in nixos_vms.
-module "vms" {
-  source = "./modules/vms"
+module "vms_ubuntu" {
+  source = "./modules/vms_ubuntu"
 
   pve_nodes = var.pve_nodes
+
+  ssh_pubkeys = var.ssh_pubkeys
+
+  proxmox_password = var.proxmox_password
+
+  ubuntu_username = var.ubuntu_username
+  ubuntu_password = var.ubuntu_password
+
+  nixos_username = var.nixos_username
+  nixos_password = var.nixos_password
+}
+
+# k3s vms
+module "vms_k3s" {
+  source = "./modules/vms_nixos"
+
+  pve_nodes = var.pve_nodes
+
+  ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
 
   nixos_vms = var.nixos_k3s_vms
 
@@ -89,8 +107,7 @@ module "vms" {
 
 module "k3s" {
   source = "./modules/k3s"
-
-  vm_ids = module.vms.ids
+  vm_ids = module.vms_k3s.ids
 
   k3s_nodes = var.nixos_k3s_vms
   k3s_name  = "k3s.${var.domain_name}"

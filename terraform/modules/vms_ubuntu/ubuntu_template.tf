@@ -108,3 +108,7 @@ resource "proxmox_virtual_environment_vm" "ubuntu_vm_template" {
     inline = ["qm template ${self.vm_id} --disk virtio0"]
   }
 }
+
+output "ubuntu_vm_template_ids" {
+  value = { for key, value in var.pve_nodes : key => proxmox_virtual_environment_vm.ubuntu_vm_template[key].vm_id }
+}
