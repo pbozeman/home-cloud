@@ -1,0 +1,8 @@
+releases:
+  #
+  # jellyfin
+  #
+  - name: jellyfin
+    namespace: media
+    chart: ../charts/jellyfin
+    version: 1.0.0

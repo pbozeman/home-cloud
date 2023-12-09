@@ -1,0 +1,6 @@
+dependencies:
+- name: jellyfin
+  repository: file://charts/jellyfin-helm
+  version: 0.3.0
+digest: sha256:bf10bb8e90d7b2317dd3034c0d831db931e9498a23f3694a7536528dfc19c3b3
+generated: "2023-12-08T20:23:28.193869666-08:00"

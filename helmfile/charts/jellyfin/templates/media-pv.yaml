@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: "{{ .Chart.Name }}-nfs-pv"
+  labels:
+    unique-label:  "{{ .Chart.Name }}-nfs-pv"
+spec:
+  capacity:
+    storage: {{ .Values.nfs_pv.capacity }}
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: {{ .Values.nfs_pv.path }}
+    server: {{ .Values.nfs_pv.server }}

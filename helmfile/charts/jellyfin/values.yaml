@@ -1,0 +1,15 @@
+nfs_pv:
+  server: nas-01
+  path: /data
+  capacity: 256Gi
+
+jellyfin:
+  image:
+    repository: jellyfin/jellyfin
+    tag: latest
+  persistence:
+    config:
+      enabled: true
+    media:
+      enabled: true
+      existingClaim: jellyfin-nfs-pvc

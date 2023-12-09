@@ -1,0 +1,8 @@
+apiVersion: v2
+name: jellyfin
+description: A Helm chart for Kubernetes that wraps Jellyfin with NFS media
+version: 0.1.0
+dependencies:
+  - name: jellyfin
+    version: "0.3.0"
+    repository: "file://charts/jellyfin-helm"

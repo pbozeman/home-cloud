@@ -1,0 +1,3 @@
+[submodule "helmfile/charts/jellyfin/charts/jellyfin-helm"]
+	path = helmfile/charts/jellyfin/charts/jellyfin-helm
+	url = git@github.com:brianmcarey/jellyfin-helm.git
