@@ -198,3 +198,12 @@ resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
   dst_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
 }
+
+resource "unifi_firewall_rule" "drop_iot_to_internet" {
+  action      = "drop"
+  name        = "drop traffic to Internet"
+  rule_index  = 2006
+  ruleset     = "WAN_OUT"
+  protocol    = "all"
+  src_address = unifi_network.network["IoT"].subnet
+}
