@@ -6,3 +6,5 @@ releases:
     namespace: media
     chart: ../charts/jellyfin
     version: 1.0.0
+    secrets:
+      - ../secrets/jellyfin.yaml

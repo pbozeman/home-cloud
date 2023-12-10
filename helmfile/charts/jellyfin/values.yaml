@@ -7,9 +7,15 @@ jellyfin:
   image:
     repository: jellyfin/jellyfin
     tag: latest
+
   persistence:
     config:
       enabled: true
+      size: 100Gi
     media:
       enabled: true
       existingClaim: jellyfin-nfs-pvc
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx

@@ -2,6 +2,9 @@ terraform/modules/k3s/nixos/flake.nix
 images/home-assistant/.config
 
 
+# tgz in helm charts
+**/charts/**/*.tgz
+
 # Local .terraform directories
 **/.terraform/*
 
