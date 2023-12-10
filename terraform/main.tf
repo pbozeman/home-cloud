@@ -40,6 +40,8 @@ module "unifi" {
 
   clients = var.unifi_clients
 
+  k3s_ingress_ip = var.k3s_ingress_ip
+
   trusted_vlan       = 20
   trusted_ssid       = var.trusted_ssid
   trusted_passphrase = var.trusted_passphrase

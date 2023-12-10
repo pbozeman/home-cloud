@@ -95,6 +95,8 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
 
   # multi disk management with this provider is very buggy. Hence the manual
   # creation here, and the ignore above.
+  #
+  # TODO: add iothread
   provisioner "remote-exec" {
     inline = [<<EOF
       if [ "${each.value.data_disk_size}" -gt 0 ]; then

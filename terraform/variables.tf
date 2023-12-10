@@ -80,6 +80,10 @@ variable "local_dns_ip" {
   type = string
 }
 
+variable "k3s_ingress_ip" {
+  type = string
+}
+
 variable "k3s_services" {
   type = map(object({
     ip = string

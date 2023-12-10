@@ -31,6 +31,20 @@ locals {
     (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
     (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase },
   }
+
+  # the 1.1.1.1 is a hack to provide at least 1 element in the array. Unifi
+  # throws an error when the members array of a firewall group drops
+  # from >= 1 down to 0.  (It is fine with 0 elements on the initial create,
+  # but not on a subsquent modify down to 0.)  The 1.1.1.1 should be a safe
+  # enough choice here as it won't exist on our network.
+  iot_with_internet_access = concat(["1.1.1.1"], [
+    for client_id, client in var.clients : client.ip if client.allow_internet
+  ])
+
+  # see comment above re 1.1.1.1
+  iot_with_k3s_ingress_access = concat(["1.1.1.1"], [
+    for client_id, client in var.clients : client.ip if client.allow_k3s_ingress
+  ])
 }
 
 data "unifi_ap_group" "default" {
@@ -119,8 +133,8 @@ resource "unifi_wlan" "wlan" {
   user_group_id = data.unifi_user_group.default.id
 }
 
-# terraformed rules from
-# https://fictionbecomesfact.com/unifi-setup-iot-vlan
+# used https://fictionbecomesfact.com/unifi-setup-iot-vlan as a reference
+# for the basic rules and structure, and then expanded
 
 resource "unifi_firewall_group" "rfc1918" {
   name    = "rfc1918"
@@ -140,6 +154,30 @@ resource "unifi_firewall_group" "dns_port" {
   members = ["83"]
 }
 
+resource "unifi_firewall_group" "https_port" {
+  name    = "https_port"
+  type    = "port-group"
+  members = ["443"]
+}
+
+resource "unifi_firewall_group" "k3s_ingress" {
+  name    = "k3s_ingress"
+  type    = "address-group"
+  members = [var.k3s_ingress_ip]
+}
+
+resource "unifi_firewall_group" "iot_internet_allowed" {
+  name    = "iot_internet_allowed"
+  type    = "address-group"
+  members = local.iot_with_internet_access
+}
+
+resource "unifi_firewall_group" "iot_k3s_ingress_allowed" {
+  name    = "iot_k3s_ingress_allowed"
+  type    = "address-group"
+  members = local.iot_with_k3s_ingress_access
+}
+
 resource "unifi_firewall_rule" "allow_established" {
   action            = "accept"
   name              = "allow established/related sessions"
@@ -156,7 +194,10 @@ resource "unifi_firewall_rule" "allow_vlan_dns" {
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
-  dst_firewall_group_ids = [unifi_firewall_group.local_dns.id, unifi_firewall_group.dns_port.id]
+  dst_firewall_group_ids = [
+    unifi_firewall_group.local_dns.id,
+    unifi_firewall_group.dns_port.id
+  ]
 }
 
 resource "unifi_firewall_rule" "allow_lan_to_vlans" {
@@ -189,20 +230,46 @@ resource "unifi_firewall_rule" "allow_trusted_to_iot" {
   dst_address = unifi_network.network["IoT"].subnet
 }
 
+resource "unifi_firewall_rule" "allow_specfic_iot_to_k3s_ingress" {
+  action                 = "accept"
+  name                   = "allow specific IoT to K3s ingress"
+  rule_index             = 2005
+  ruleset                = "LAN_IN"
+  protocol               = "all"
+  src_firewall_group_ids = [unifi_firewall_group.iot_k3s_ingress_allowed.id]
+  dst_firewall_group_ids = [
+    unifi_firewall_group.k3s_ingress.id,
+    unifi_firewall_group.https_port.id
+  ]
+
+  depends_on = [unifi_firewall_group.iot_k3s_ingress_allowed]
+}
+
 resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
   action                 = "drop"
   name                   = "drop traffic between VLANs"
-  rule_index             = 2005
+  rule_index             = 2006
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
   dst_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
 }
 
+resource "unifi_firewall_rule" "allow_specfic_iot_to_internet" {
+  action                 = "accept"
+  name                   = "allow specific IoT to Internet"
+  rule_index             = 2007
+  ruleset                = "WAN_OUT"
+  protocol               = "all"
+  src_firewall_group_ids = [unifi_firewall_group.iot_internet_allowed.id]
+
+  depends_on = [unifi_firewall_group.iot_internet_allowed]
+}
+
 resource "unifi_firewall_rule" "drop_iot_to_internet" {
   action      = "drop"
   name        = "drop traffic to Internet"
-  rule_index  = 2006
+  rule_index  = 2008
   ruleset     = "WAN_OUT"
   protocol    = "all"
   src_address = unifi_network.network["IoT"].subnet

@@ -62,3 +62,7 @@ variable "clients" {
     allow_k3s_ingress = bool
   }))
 }
+
+variable "k3s_ingress_ip" {
+  type = string
+}
