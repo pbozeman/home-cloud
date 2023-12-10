@@ -39,6 +39,14 @@ data "unifi_ap_group" "default" {
 data "unifi_user_group" "default" {
 }
 
+resource "unifi_user" "clients" {
+  for_each = var.clients
+
+  name     = each.key
+  mac      = each.value.mac
+  fixed_ip = each.value.ip
+}
+
 # Note: the default network already exist and so it must be imported with
 #   terraform import module.unifi.unifi_network.lan name=Default
 resource "unifi_network" "lan" {

@@ -53,3 +53,12 @@ variable "guest_ssid" {
 variable "guest_passphrase" {
   type = string
 }
+
+variable "clients" {
+  type = map(object({
+    mac               = string
+    ip                = string
+    allow_internet    = bool
+    allow_k3s_ingress = bool
+  }))
+}

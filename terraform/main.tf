@@ -38,6 +38,8 @@ module "unifi" {
 
   local_dns_ip = var.local_dns_ip
 
+  clients = var.unifi_clients
+
   trusted_vlan       = 20
   trusted_ssid       = var.trusted_ssid
   trusted_passphrase = var.trusted_passphrase

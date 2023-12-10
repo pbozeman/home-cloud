@@ -63,6 +63,15 @@ variable "guest_passphrase" {
   sensitive = true
 }
 
+variable "unifi_clients" {
+  type = map(object({
+    mac               = string
+    ip                = string
+    allow_internet    = bool
+    allow_k3s_ingress = bool
+  }))
+}
+
 variable "cloudkey_01_ip" {
   type = string
 }
