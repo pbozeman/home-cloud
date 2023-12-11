@@ -19,13 +19,20 @@ data:
     automation: []
     group:
     script:
-    scene:
 
     lutron_caseta:
       - host: {{ .Values.configuration.lutron_ip }}
         keyfile: caseta.key
         certfile: caseta.crt
         ca_certs: caseta-bridge.crt
+
+    scene:
+      - name: Kitchen Night
+        icon: "mdi:lightbulb-night"
+        entities:
+          light.kitchen_ceiling_lights:
+            state: "on"
+            brightness: 75
 
     input_boolean:
       goodnight_mode:

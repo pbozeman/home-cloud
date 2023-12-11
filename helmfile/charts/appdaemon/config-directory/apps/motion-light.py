@@ -28,7 +28,7 @@ class MotionLight(hass.Hass):
 
         # misc settings
         self.blocker = self.args.get("blocker", None)
-        self.motion_off_delay_sec = self.args.get("delay_sec", 5)
+        self.motion_off_delay_sec = self.args.get("delay_sec", 300)
         self.turn_on_enabled = self.args.get("turn_on", True)
         self.turn_off_enabled = self.args.get("turn_off", True)
 

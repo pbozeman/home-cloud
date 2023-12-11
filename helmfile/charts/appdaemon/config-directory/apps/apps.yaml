@@ -12,3 +12,10 @@ motion_light:
   entity: input_boolean.fake_light
   night_mode_entity: input_boolean.fake_night_light
   sensors: [input_boolean.fake_motion]
+
+kitchen_motion_light:
+  module: motion-light
+  class: MotionLight
+  entity: light.kitchen_ceiling_lights
+  night_mode_entity: scene.kitchen_night
+  sensors: [binary_sensor.kitchen_motion_occupancy]
