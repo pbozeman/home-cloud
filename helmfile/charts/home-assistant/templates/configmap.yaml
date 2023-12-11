@@ -21,6 +21,12 @@ data:
     script:
     scene:
 
+    lutron_caseta:
+      - host: {{ .Values.configuration.lutron_ip }}
+        keyfile: caseta.key
+        certfile: caseta.crt
+        ca_certs: caseta-bridge.crt
+
     input_boolean:
       goodnight_mode:
         name: Goodnight Mode
@@ -43,3 +49,9 @@ data:
         initial: off
         icon: mdi:lightbulb
       {{ end }}
+  caseta.key: |-
+    {{ .Values.lutron.caseta_key | nindent 4 | trim }}
+  caseta.crt: |-
+    {{ .Values.lutron.caseta_crt | nindent 4 | trim }}
+  caseta-bridge.crt: |-
+    {{ .Values.lutron.caseta_bridge_crt | nindent 4 | trim }}

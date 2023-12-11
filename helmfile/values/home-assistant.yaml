@@ -1,3 +1,6 @@
 image:
   repository: homeassistant/home-assistant
   tag: stable
+configuration:
+  # TODO: get from terraform
+  lutron_ip: 192.168.40.11

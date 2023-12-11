@@ -37,6 +37,15 @@ spec:
             - name: config-volume
               mountPath: /config/configuration.yaml
               subPath: configuration.yaml
+            - name: config-volume
+              mountPath: /config/caseta.key
+              subPath: caseta.key
+            - name: config-volume
+              mountPath: /config/caseta.crt
+              subPath: caseta.crt
+            - name: config-volume
+              mountPath: /config/caseta-bridge.crt
+              subPath: caseta-bridge.crt
       volumes:
         - name: config-volume
           configMap:

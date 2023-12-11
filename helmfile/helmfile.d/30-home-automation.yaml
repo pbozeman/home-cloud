@@ -35,6 +35,7 @@ releases:
       - ../values/home-assistant.yaml
     secrets:
       - ../secrets/common.yaml
+      - ../secrets/home-assistant.yaml
 
   #
   # appdaemon
