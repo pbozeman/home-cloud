@@ -80,6 +80,9 @@
       "--disable=local-storage";
   };
 
+  services.avahi.enable = true;
+  services.avahi.reflector = true;
+
   networking.firewall.allowedTCPPorts = [
     # https://kubernetes.io/docs/reference/networking/ports-and-protocols/
     6443
@@ -95,6 +98,7 @@
 
   networking.firewall.allowedUDPPorts = [
     8472 # k3s, flannel: required if using multi-node for inter-node networking
+    5353 # mdns for apple tv etc
   ];
 
   environment.systemPackages = with pkgs; [
