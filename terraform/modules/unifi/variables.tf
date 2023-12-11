@@ -54,9 +54,22 @@ variable "guest_passphrase" {
   type = string
 }
 
+variable "switches" {
+  type = map(object({
+    mac  = string
+    name = string
+    port_overrides = list(object({
+      number       = number
+      name         = string
+      port_profile = string
+    }))
+  }))
+}
+
 variable "clients" {
   type = map(object({
     mac               = string
+    name              = string
     ip                = string
     allow_internet    = bool
     allow_k3s_ingress = bool

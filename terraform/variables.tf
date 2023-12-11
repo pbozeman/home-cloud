@@ -63,9 +63,22 @@ variable "guest_passphrase" {
   sensitive = true
 }
 
+variable "unifi_switches" {
+  type = map(object({
+    mac  = string
+    name = string
+    port_overrides = list(object({
+      number       = number
+      name         = string
+      port_profile = string
+    }))
+  }))
+}
+
 variable "unifi_clients" {
   type = map(object({
     mac               = string
+    name              = string
     ip                = string
     allow_internet    = bool
     allow_k3s_ingress = bool

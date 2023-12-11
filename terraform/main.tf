@@ -38,7 +38,8 @@ module "unifi" {
 
   local_dns_ip = var.local_dns_ip
 
-  clients = var.unifi_clients
+  switches = var.unifi_switches
+  clients  = var.unifi_clients
 
   k3s_ingress_ip = var.k3s_ingress_ip
 

@@ -56,7 +56,7 @@ data "unifi_user_group" "default" {
 resource "unifi_user" "clients" {
   for_each = var.clients
 
-  name     = each.key
+  name     = each.value.name
   mac      = each.value.mac
   fixed_ip = each.value.ip
 }
@@ -131,6 +131,36 @@ resource "unifi_wlan" "wlan" {
 
   ap_group_ids  = [data.unifi_ap_group.default.id]
   user_group_id = data.unifi_user_group.default.id
+}
+
+#
+# Device/Port overrides
+#
+
+resource "unifi_port_profile" "vlan" {
+  for_each              = local.vlans
+  name                  = each.key
+  forward               = "customize"
+  native_networkconf_id = unifi_network.network[each.key].id
+}
+
+resource "unifi_device" "switches" {
+  for_each = var.switches
+
+  name = each.value.name
+  mac  = each.value.mac
+
+  dynamic "port_override" {
+    for_each = each.value.port_overrides
+    content {
+      number          = port_override.value.number
+      name            = port_override.value.name
+      port_profile_id = unifi_port_profile.vlan[port_override.value.port_profile].id
+    }
+  }
+
+  # TODO: eventually change this to true
+  forget_on_destroy = false
 }
 
 # used https://fictionbecomesfact.com/unifi-setup-iot-vlan as a reference
