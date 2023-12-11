@@ -3,10 +3,18 @@ kind: ConfigMap
 metadata:
   name: "{{ .Chart.Name }}-config"
 data:
-  # TODO: pass in lat/long here
   configuration.yaml: |
     # Loads default set of integrations. Do not remove.
     default_config:
+
+    homeassistant:
+      latitude: {{ .Values.latitude }}
+      longitude: {{ .Values.longitude }}
+      elevation: {{ .Values.elevation }}
+      time_zone: {{ .Values.time_zone }}
+      unit_system: us_customary
+      currency: USD
+      country: US
 
     http:
       use_x_forwarded_for: true
