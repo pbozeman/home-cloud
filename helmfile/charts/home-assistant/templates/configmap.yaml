@@ -42,9 +42,55 @@ data:
             state: "on"
             brightness: 75
 
+      - name: TV Time Playing
+        icon: "mdi:lightbulb-night"
+        entities:
+          light.ames_light:
+            state: "on"
+            brightness: 75
+          light.ram_light:
+            state: "off"
+          light.main_bedroom_ceiling_lights:
+            state: "off"
+          light.hallway_main_lights:
+            state: "off"
+          light.kitchen_ceiling_lights:
+            state: "off"
+          light.dining_room_chandelier:
+            state: "off"
+          light.nook_light:
+            state: "off"
+
+      - name: TV Time Paused
+        icon: "mdi:lightbulb-night"
+        entities:
+          light.ames_light:
+            state: "on"
+            brightness: 150
+          light.ram_light:
+            state: "on"
+            brightness: 150
+          light.main_bedroom_ceiling_lights:
+            state: "off"
+          light.hallway_main_lights:
+            state: "off"
+          light.kitchen_ceiling_lights:
+            state: "on"
+            brightness: 150
+          light.dining_room_chandelier:
+            state: "on"
+            brightness: 150
+          light.nook_light:
+            state: "off"
+
     input_boolean:
       goodnight_mode:
         name: Goodnight Mode
+        initial: off
+        icon: mdi:toggle-switch
+
+      tv_time_mode:
+        name: TV Time Mode
         initial: off
         icon: mdi:toggle-switch
 

@@ -12,3 +12,10 @@ kitchen_motion_light:
   entity: light.kitchen_ceiling_lights
   night_mode_entity: scene.kitchen_night
   sensors: [binary_sensor.entry_occupancy, binary_sensor.kitchen_occupancy]
+
+tv_time:
+  module: tv-time
+  class: TvTime
+  scene_playing: scene.tv_time_playing
+  scene_paused: scene.tv_time_paused
+  media_players: [media_player.lg_tv, media_player.living_room_atv]
