@@ -18,6 +18,11 @@ data:
           cert_verify: False
     http:
       url: http://0.0.0.0:{{ .Values.container.port }}
+
+    # The devices work. We don't need to keep checking with their vendor.
+    ota:
+      disable_automatic_update_check: true
+
     admin:
     api:
     hadashboard:
