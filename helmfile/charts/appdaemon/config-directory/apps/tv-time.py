@@ -16,25 +16,47 @@ class TvTime(hass.Hass):
         self.listen_state(self.paused, self.media_players, new="paused")
         self.listen_state(self.playing, self.media_players, new="playing")
         self.listen_state(self.off, self.media_players, new="off")
+        self.listen_state(self.on, self.media_players, new="on")
+        self.listen_state(self.tv_time_on, self.tv_time_mode, new="on")
+        self.listen_state(self.tv_time_off, self.tv_time_mode, new="off")
 
     def paused(self, entity, attribute, old, new, kwargs):
         self.log("paused")
-        if not self.is_tv_time():
-            return
-        self.turn_on(self.scene_paused)
+        if self.is_tv_time():
+            self.turn_on(self.scene_paused)
 
     def playing(self, entity, attribute, old, new, kwargs):
         self.log("playing")
-        if not self.is_tv_time():
-            return
-        self.turn_on(self.scene_playing)
+        if self.is_tv_time():
+            self.turn_on(self.scene_playing)
 
     def off(self, entity, attribute, old, new, kwargs):
         self.log("off")
         self.call_service("input_boolean/turn_off", entity_id=self.tv_time_mode)
 
+    def on(self, entity, attribute, old, new, kwargs):
+        self.log("on")
+        if not self.too_early():
+            self.call_service("input_boolean/turn_on", entity_id=self.tv_time_mode)
+
+    def tv_time_on(self, entity, attribute, old, new, kwargs):
+        message = "TV Time ON"
+        self.call_service("notify/lg_tv", message=message)
+
+    def tv_time_off(self, entity, attribute, old, new, kwargs):
+        message = "TV Time OFF"
+        self.call_service("notify/lg_tv", message=message)
+
     def is_tv_time(self):
+        # ignore the state, in case the kids turned it on by pressing the
+        # pico
+        if self.too_early():
+            return False
+
         return self.get_state(self.tv_time_mode) == "on"
+
+    def too_early(self):
+        return self.get_now().hour < 21
 
     def log(self, str):
         super().log(f"TvTime {str}")
