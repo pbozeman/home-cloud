@@ -30,6 +30,7 @@ Currently completed:
 
 - K3s:
   - all the usual, prometheus, nginx-ingress, etc.
+  - private docker repo
   - backup of stateful pv/pvc and restore on a raw cluster
   - ephemeral home-automation stack, but with stateful vms that get restored
     after a cluster wipe
