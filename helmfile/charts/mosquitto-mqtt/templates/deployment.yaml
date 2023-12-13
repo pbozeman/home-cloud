@@ -22,6 +22,9 @@ spec:
         - name: "{{ .Chart.Name }}"
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: TZ
+              value: {{ .Values.time_zone }}
           resources:
             requests:
               memory: "{{ .Values.resources.requests.memory }}"

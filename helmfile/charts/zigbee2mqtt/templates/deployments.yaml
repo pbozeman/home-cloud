@@ -33,6 +33,8 @@ spec:
           ports:
             - containerPort: {{ .Values.container.port }}
           env:
+            - name: TZ
+              value: {{ .Values.time_zone }}
             # https://github.com/Koenkk/zigbee2mqtt/discussions/13584
             - name: ZIGBEE2MQTT_CONFIG_MQTT_SERVER
               value: "{{ .Values.mqtt_server }}"
