@@ -36,6 +36,11 @@ releases:
     secrets:
       - ../secrets/common.yaml
       - ../secrets/home-assistant.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "sh"
+        args: ["../../images/home-assistant/build.sh"]
 
   #
   # appdaemon

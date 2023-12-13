@@ -1,6 +1,7 @@
 image:
-  repository: homeassistant/home-assistant
+  repository: registry.blinkies.io/home-assistant
   tag: stable
+  pullPolicy: Always
 configuration:
   # TODO: get from terraform
   lutron_ip: 192.168.40.11

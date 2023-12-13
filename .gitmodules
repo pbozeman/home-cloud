@@ -1,3 +1,6 @@
 [submodule "helmfile/charts/jellyfin/charts/jellyfin-helm"]
 	path = helmfile/charts/jellyfin/charts/jellyfin-helm
 	url = git@github.com:brianmcarey/jellyfin-helm.git
+[submodule "images/home-assistant/repos/fordpass-ha"]
+	path = images/home-assistant/injected/repos/fordpass-ha
+	url = git@github.com:itchannel/fordpass-ha.git
