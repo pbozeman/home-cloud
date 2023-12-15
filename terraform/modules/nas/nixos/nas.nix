@@ -27,11 +27,11 @@
     fsType = "vfat";
   };
 
-  fileSystems."/data" = {
-    device = "/dev/vdb";
-    fsType = "ext4";
-    autoFormat = true;
-  };
+  #fileSystems."/data" = {
+  #  device = "/dev/vdb";
+  #  fsType = "ext4";
+  #  autoFormat = true;
+  #};
 
   swapDevices = [];
 
@@ -59,9 +59,9 @@
     lockdPort = 4001;
     mountdPort = 4002;
     statdPort = 4000;
-    exports = ''
-      /data 192.168.10.0/24(rw,sync,no_subtree_check)
-    '';
+    #exports = ''
+    #  /data 192.168.10.0/24(rw,sync,no_subtree_check)
+    #'';
   };
 
   services.mullvad-vpn = {
@@ -71,8 +71,8 @@
   networking.firewall = {
     enable = true;
     # for NFSv3; view with `rpcinfo -p`
-    allowedTCPPorts = [ 111  2049 4000 4001 4002 20048 ];
-    allowedUDPPorts = [ 111 2049 4000 4001  4002 20048 ];
+    allowedTCPPorts = [ 111 2049 4000 4001 4002 20048 ];
+    allowedUDPPorts = [ 111 2049 4000 4001 4002 20048 ];
   };
 
   environment.systemPackages = with pkgs; [

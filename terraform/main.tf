@@ -63,7 +63,8 @@ module "unifi" {
 module "proxmox" {
   source = "./modules/proxmox"
 
-  pve_nodes = var.pve_nodes
+  pve_nodes       = var.pve_nodes
+  pve_iommu_nodes = var.pve_iommu_nodes
 
   local_dns_ip = var.local_dns_ip
 

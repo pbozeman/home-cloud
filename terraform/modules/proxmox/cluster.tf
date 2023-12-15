@@ -1,3 +1,11 @@
+# NOTE: if new resoures are added that come at the end of the
+# dependency chain, add the last one here.
+resource "null_resource" "proxmox_cluster_ready" {
+  depends_on = [
+    null_resource.proxmox_cluster_nodes
+  ]
+}
+
 # unattended pvecm requires that all the proxmox pve nodes can ssh
 # to each other
 resource "null_resource" "proxmox_ssh_config" {
@@ -117,7 +125,7 @@ resource "proxmox_virtual_environment_dns" "pve" {
   ]
 
   depends_on = [
-    null_resource.proxmox_cluster_nodes
+    null_resource.proxmox_cluster_ready
   ]
 }
 
@@ -126,7 +134,6 @@ data "proxmox_virtual_environment_dns" "pve" {
   node_name = each.key
 
   depends_on = [
-    null_resource.proxmox_cluster_nodes
+    null_resource.proxmox_cluster_ready
   ]
 }
-

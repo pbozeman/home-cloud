@@ -1,3 +1,11 @@
+# NOTE: if new resoures are added that come at the end of the
+# dependency chain, add the last one here.
+resource "null_resource" "proxmox_repos_ready" {
+  depends_on = [
+    null_resource.repos_enterprise_disable,
+    null_resource.repos_upgrade
+  ]
+}
 
 resource "null_resource" "repos_enterprise_disable" {
   for_each = var.pve_nodes

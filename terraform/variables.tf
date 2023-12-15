@@ -112,6 +112,15 @@ variable "pve_nodes" {
   }))
 }
 
+variable "pve_iommu_nodes" {
+  type = map(object({
+    iommu_key = string
+    blacklist = list(string)
+    vfio_ids  = string
+  }))
+  default = {}
+}
+
 variable "nixos_dev_vms" {
   type = map(object({
     pve_node       = string
