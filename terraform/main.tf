@@ -72,6 +72,8 @@ module "proxmox" {
   proxmox_password    = var.proxmox_password
   proxmox_ssh_privkey = var.proxmox_ssh_privkey
   proxmox_ssh_pubkey  = var.proxmox_ssh_pubkey
+
+  dns_ids = module.cloudflare.ids
 }
 
 module "vms_ubuntu" {

@@ -29,6 +29,8 @@ resource "cloudflare_record" "host" {
   proxied = false
 }
 
+# FIXME: the current variable/module setup for this is creating the round
+# robin entries for pve before nodes have been added to the cluster.
 resource "cloudflare_record" "round_robin" {
   for_each = { for item in local.flattened_round_robin : "${item.key}-${item.value}" => item }
 
@@ -37,4 +39,8 @@ resource "cloudflare_record" "round_robin" {
   value   = each.value.value
   type    = "A"
   proxied = false
+}
+
+output "ids" {
+  value = [for v in values(cloudflare_record.host) : v.id]
 }

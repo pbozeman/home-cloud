@@ -75,6 +75,8 @@ variable "unifi_switches" {
   }))
 }
 
+# FIXME: the allow_* are actually only used on the IoT vlan. It is misleanding
+# to mix the iot and regular clients
 variable "unifi_clients" {
   type = map(object({
     mac               = string

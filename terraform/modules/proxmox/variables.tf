@@ -23,3 +23,7 @@ variable "proxmox_password" {
 variable "ssh_pubkeys" {
   type = list(string)
 }
+
+variable "dns_ids" {
+  type = list(string)
+}
