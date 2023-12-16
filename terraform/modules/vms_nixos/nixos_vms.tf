@@ -125,6 +125,26 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
       nix run github:numtide/nixos-anywhere -- --flake .#template ${each.value.username}@${each.value.ip} --build-on-remote
     EOF
   }
+
+  #
+  # wait for the node to be available post switch
+  #
+  # Some following provisioners use local-exec that also do (e.g. nix-build).
+  # remote-exec is more robust in retries. Use it here to make sure the node
+  # is fully ready.
+  #
+  # TODO: add keys via terraform so that we don't have to rely on the user's
+  # private key
+  provisioner "remote-exec" {
+    inline = ["true"]
+
+    connection {
+      type        = "ssh"
+      user        = each.value.username
+      private_key = file("~/.ssh/id_ed25519")
+      host        = each.value.ip
+    }
+  }
 }
 
 output "ids" {
