@@ -1,3 +1,10 @@
+# FIXME: the variables evolved without knowing about
+# defaults, optional(<type>), etc. And, they kept getting
+# added with minimal/no rethiniking of their sturcture
+# as funciontality was needed. Step back and refactor
+# with a less total n00b understaning of terraform and
+# the overall configuration needs. Ditto for submodules.
+
 variable "ssh_pubkeys" {
   type = list(string)
 }
