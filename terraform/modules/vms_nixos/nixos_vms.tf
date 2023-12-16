@@ -65,6 +65,15 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     dedicated = each.value.memory
   }
 
+  dynamic "hostpci" {
+    for_each = { for idx, addr in(each.value.pci_passthrough_addrs != null ? each.value.pci_passthrough_addrs : []) : tostring(idx) => addr }
+
+    content {
+      id     = hostpci.value
+      device = "hostpci${hostpci.key}"
+    }
+  }
+
   initialization {
     datastore_id = "local"
 
