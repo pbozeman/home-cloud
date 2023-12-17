@@ -141,10 +141,18 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
   # it will always trigger on a create, but not on update. splitting it out
   # has the advantage that it can reuse the vm if it failed. However, it
   # won't rerun if the vm is trainted and re-created.
+  #
+  # flake.nix is instantiated from a template, but nixos-anywhere requires
+  # that it be checked into git in order to make it part of the build. It is
+  # ok if it is dirty.  We don't want to check in the actual flake because
+  # it could contain secrets. It's in gitignore, but assume-unchanged is
+  # also necessary to keep it from showing up in diffs.
   provisioner "local-exec" {
     command = <<EOF
       set -e
+      trap 'git update-index --assume-unchanged flake.nix' EXIT
       cd ${path.module}/nixos
+      git update-index --no-assume-unchanged flake.nix
       nix run github:numtide/nixos-anywhere -- --flake .#${each.key} ${each.value.username}@${each.value.ip} --build-on-remote
     EOF
   }
@@ -168,6 +176,10 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
       host        = each.value.ip
     }
   }
+
+  depends_on = [
+    local_file.flake
+  ]
 }
 
 output "ids" {
