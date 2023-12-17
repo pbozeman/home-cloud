@@ -19,6 +19,9 @@ variable "nixos_vms" {
     data_disk_size        = number
     username              = string
     pci_passthrough_addrs = optional(list(string))
+    zfs_disks             = optional(map(string), {})
+
+    danger_wipe_zfs_disks_and_initialize = optional(bool, false)
   }))
 }
 

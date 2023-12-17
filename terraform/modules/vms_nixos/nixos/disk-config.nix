@@ -1,6 +1,52 @@
-{ disks ? [ "/dev/vda" ], ... }: {
+{
+  disks,
+  zfs-disks,
+  zfs-init-zpool,
+  ...
+}: let
+  createDisk = name: device: {
+    type = "disk";
+    device = device;
+    content = {
+      type = "gpt";
+      partitions = {
+        zfs = {
+          size = "100%";
+          content = {
+            type = "zfs";
+            pool = "storage";
+          };
+        };
+      };
+    };
+  };
+
+  createZpool = name: {
+    type = "zpool";
+    mode = "raidz";
+    rootFsOptions = {
+      compression = "on";
+      "com.sun:auto-snapshot" = "false";
+    };
+    datasets = {};
+  };
+
+  # Create zfs paritions, only if requested
+  disko-zfs-disks = if zfs-init-zpool then
+    builtins.listToAttrs (map (disk: {
+      name = disk.name;
+      value = createDisk disk.name disk.device;
+    }) zfs-disks)
+  else {};
+
+  # Create zpool, only if requested
+  disko-zpool = if zfs-init-zpool then {
+    storage = createZpool "storage";
+  } else {};
+
+in {
   disko.devices = {
-    disk = {
+    disk = disko-zfs-disks // {
       main = {
         type = "disk";
         device = builtins.elemAt disks 0;
@@ -39,5 +85,6 @@
         };
       };
     };
+    zpool = disko-zpool;
   };
 }

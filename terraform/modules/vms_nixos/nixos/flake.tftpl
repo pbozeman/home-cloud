@@ -13,10 +13,17 @@
     nixosConfigurations.${host} = let
       hostname = "${host}";
       hostId = "${values.host_id}";
+      zfs-init-zpool = ${values.danger_wipe_zfs_disks_and_initialize};
+
+      zfs-disks = [
+        %{ for disk_name, device in values.zfs_disks ~}
+        { name = "${disk_name}"; device = "${device}"; }
+        %{ endfor ~}
+      ];
     in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit hostname hostId;
+        inherit hostname hostId zfs-disks zfs-init-zpool;
       };
       modules = [
         ./base.nix
