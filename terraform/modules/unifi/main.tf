@@ -223,7 +223,7 @@ resource "unifi_firewall_group" "iot_k3s_ingress_allowed" {
 resource "unifi_firewall_rule" "allow_established" {
   action            = "accept"
   name              = "allow established/related sessions"
-  rule_index        = 2000
+  rule_index        = 20000
   ruleset           = "LAN_IN"
   state_established = true
   state_related     = true
@@ -232,7 +232,7 @@ resource "unifi_firewall_rule" "allow_established" {
 resource "unifi_firewall_rule" "allow_vlan_dns" {
   action                 = "accept"
   name                   = "allow DNS from VLANs"
-  rule_index             = 2001
+  rule_index             = 20001
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
@@ -245,7 +245,7 @@ resource "unifi_firewall_rule" "allow_vlan_dns" {
 resource "unifi_firewall_rule" "allow_lan_to_vlans" {
   action                 = "accept"
   name                   = "allow LAN to all VLANs"
-  rule_index             = 2002
+  rule_index             = 20002
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_address            = unifi_network.lan.subnet
@@ -255,7 +255,7 @@ resource "unifi_firewall_rule" "allow_lan_to_vlans" {
 resource "unifi_firewall_rule" "allow_trusted_to_lan" {
   action      = "accept"
   name        = "allow Trusted to LAN"
-  rule_index  = 2003
+  rule_index  = 20003
   ruleset     = "LAN_IN"
   protocol    = "all"
   src_address = unifi_network.network["Trusted"].subnet
@@ -265,7 +265,7 @@ resource "unifi_firewall_rule" "allow_trusted_to_lan" {
 resource "unifi_firewall_rule" "allow_trusted_to_iot" {
   action      = "accept"
   name        = "allow Trusted to IoT"
-  rule_index  = 2004
+  rule_index  = 20004
   ruleset     = "LAN_IN"
   protocol    = "all"
   src_address = unifi_network.network["Trusted"].subnet
@@ -275,7 +275,7 @@ resource "unifi_firewall_rule" "allow_trusted_to_iot" {
 resource "unifi_firewall_rule" "allow_specfic_iot_to_k3s_ingress" {
   action                 = "accept"
   name                   = "allow specific IoT to K3s ingress"
-  rule_index             = 2005
+  rule_index             = 20005
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.iot_k3s_ingress_allowed.id]
@@ -288,7 +288,7 @@ resource "unifi_firewall_rule" "allow_specfic_iot_to_k3s_ingress" {
 resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
   action                 = "drop"
   name                   = "drop traffic between VLANs"
-  rule_index             = 2999
+  rule_index             = 20006
   ruleset                = "LAN_IN"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.rfc1918.id]
@@ -303,7 +303,7 @@ resource "unifi_firewall_rule" "drop_traffic_between_vlans" {
 resource "unifi_firewall_rule" "allow_specfic_iot_to_external_dns" {
   action                 = "accept"
   name                   = "allow specific IoT to Internet"
-  rule_index             = 2000
+  rule_index             = 20000
   ruleset                = "WAN_OUT"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.iot_k3s_ingress_allowed.id]
@@ -313,7 +313,7 @@ resource "unifi_firewall_rule" "allow_specfic_iot_to_external_dns" {
 resource "unifi_firewall_rule" "allow_specfic_iot_to_internet" {
   action                 = "accept"
   name                   = "allow specific IoT to Internet"
-  rule_index             = 2001
+  rule_index             = 20001
   ruleset                = "WAN_OUT"
   protocol               = "all"
   src_firewall_group_ids = [unifi_firewall_group.iot_internet_allowed.id]
@@ -324,7 +324,7 @@ resource "unifi_firewall_rule" "allow_specfic_iot_to_internet" {
 resource "unifi_firewall_rule" "drop_iot_to_internet" {
   action      = "drop"
   name        = "drop traffic to Internet"
-  rule_index  = 2999
+  rule_index  = 20002
   ruleset     = "WAN_OUT"
   protocol    = "all"
   src_address = unifi_network.network["IoT"].subnet
