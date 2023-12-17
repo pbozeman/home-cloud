@@ -3,6 +3,7 @@
   pkgs,
   modulesPath,
   hostname,
+  hostId,
   ... }: {
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -14,8 +15,12 @@
 
   boot.initrd.availableKernelModules = [ "ata_piix" "uhci_hcd" "virtio_pci" "sr_mod" "virtio_blk" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ "kvm-amd" "zfs" ];
+  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  boot.supportedFilesystems = [ "zfs" ];
   boot.extraModulePackages = [ ];
+  boot.zfs.extraPools = [ "storage" ];
+  boot.zfs.forceImportRoot = false;
 
   fileSystems."/" = {
     device = "/dev/vda3";
@@ -27,17 +32,12 @@
     fsType = "vfat";
   };
 
-  #fileSystems."/data" = {
-  #  device = "/dev/vdb";
-  #  fsType = "ext4";
-  #  autoFormat = true;
-  #};
-
   swapDevices = [];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  networking.hostName = "";
+  networking.hostName = hostname;
+  networking.hostId = hostId;
   networking.useNetworkd = true;
 
   services.cloud-init.enable = true;
@@ -79,5 +79,6 @@
     jq
     mullvad
     mullvad-vpn
+    zfs
   ];
 }

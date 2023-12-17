@@ -2,13 +2,14 @@
   inputs.nixpkgs.url = "nixpkgs/nixos-unstable";
 
   outputs = { nixpkgs, ... }: {
-    %{ for host in hosts ~}
+    %{ for host, values in nodes ~}
     nixosConfigurations.${host} = let
       hostname = "${host}";
+      hostId = "${values.host_id}";
     in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit hostname;
+        inherit hostname hostId;
       };
       modules = [
         ./nas.nix

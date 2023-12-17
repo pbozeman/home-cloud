@@ -119,11 +119,13 @@ module "vms_nixos" {
   nixos_password = var.nixos_password
 }
 
-#module "nas" {
-#  source    = "./modules/nas"
-#  vm_ids    = module.vms_nas.ids
-#  nas_nodes = var.nixos_nas_vms
-#}
+module "nas" {
+  source = "./modules/nas"
+
+  vm_ids = module.vms_nixos.ids
+
+  nas_nodes = var.nixos_nas_vms
+}
 
 module "k3s" {
   source = "./modules/k3s"

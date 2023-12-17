@@ -113,7 +113,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
       disk,
       started,
     ]
-    prevent_destroy = false
+    prevent_destroy = true
   }
 
   # multi disk management with this provider is very buggy. Hence the manual

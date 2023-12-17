@@ -4,7 +4,7 @@ locals {
 
 resource "local_file" "flake" {
   content = templatefile("${local.flake_path}/flake.tftpl", {
-    hosts = keys(var.nas_nodes)
+    nodes = var.nas_nodes
   })
 
   filename        = "${local.flake_path}/flake.nix"
@@ -30,8 +30,7 @@ resource "null_resource" "deploy" {
 
   provisioner "local-exec" {
     environment = {
-      NIX_SSHOPTS = "-o StrictHostKeyChecking=no"
-    }
+    NIX_SSHOPTS = "-o StrictHostKeyChecking=no" }
 
     interpreter = concat(
       ["nix",
