@@ -135,6 +135,7 @@ variable "nixos_dev_vms" {
     gateway        = string
     cores          = number
     memory         = number
+    host_id        = string
     data_disk_size = number
     username       = string
   }))
@@ -147,6 +148,7 @@ variable "nixos_nas_vms" {
     gateway               = string
     cores                 = number
     memory                = number
+    host_id               = string
     data_disk_size        = number
     username              = string
     pci_passthrough_addrs = list(string)
@@ -160,6 +162,7 @@ variable "nixos_k3s_vms" {
     gateway        = string
     cores          = number
     memory         = number
+    host_id        = string
     username       = string
     data_disk_size = number
     cluster_init   = bool

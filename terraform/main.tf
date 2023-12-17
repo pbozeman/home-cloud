@@ -18,6 +18,12 @@ locals {
     pve = [for node in var.pve_nodes : node.ip]
     k3s = [for node in var.nixos_k3s_vms : node.ip]
   }
+
+  nixos_vms = merge(
+    var.nixos_nas_vms,
+    var.nixos_dev_vms,
+    var.nixos_k3s_vms,
+  )
 }
 
 # DNS name for the physical servers and appliances
@@ -93,15 +99,14 @@ module "vms_ubuntu" {
   nixos_password = var.nixos_password
 }
 
-# dev vms
-module "vms_dev" {
+module "vms_nixos" {
   source = "./modules/vms_nixos"
 
   pve_nodes = var.pve_nodes
 
   ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
 
-  nixos_vms = var.nixos_dev_vms
+  nixos_vms = local.nixos_vms
 
   ssh_pubkeys = var.ssh_pubkeys
 
@@ -114,57 +119,16 @@ module "vms_dev" {
   nixos_password = var.nixos_password
 }
 
-# nas vms
-module "vms_nas" {
-  source = "./modules/vms_nixos"
-
-  pve_nodes = var.pve_nodes
-
-  ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
-
-  nixos_vms = var.nixos_nas_vms
-
-  ssh_pubkeys = var.ssh_pubkeys
-
-  proxmox_password = var.proxmox_password
-
-  ubuntu_username = var.ubuntu_username
-  ubuntu_password = var.ubuntu_password
-
-  nixos_username = var.nixos_username
-  nixos_password = var.nixos_password
-}
-
-module "nas" {
-  source    = "./modules/nas"
-  vm_ids    = module.vms_nas.ids
-  nas_nodes = var.nixos_nas_vms
-}
-
-# k3s vms
-module "vms_k3s" {
-  source = "./modules/vms_nixos"
-
-  pve_nodes = var.pve_nodes
-
-  ubuntu_vm_template_ids = module.vms_ubuntu.ubuntu_vm_template_ids
-
-  nixos_vms = var.nixos_k3s_vms
-
-  ssh_pubkeys = var.ssh_pubkeys
-
-  proxmox_password = var.proxmox_password
-
-  ubuntu_username = var.ubuntu_username
-  ubuntu_password = var.ubuntu_password
-
-  nixos_username = var.nixos_username
-  nixos_password = var.nixos_password
-}
+#module "nas" {
+#  source    = "./modules/nas"
+#  vm_ids    = module.vms_nas.ids
+#  nas_nodes = var.nixos_nas_vms
+#}
 
 module "k3s" {
   source = "./modules/k3s"
-  vm_ids = module.vms_k3s.ids
+
+  vm_ids = module.vms_nixos.ids
 
   k3s_nodes = var.nixos_k3s_vms
   k3s_name  = "k3s.${var.domain_name}"

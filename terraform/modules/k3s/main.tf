@@ -33,7 +33,7 @@ resource "null_resource" "deploy" {
 
   triggers = {
     derivation = data.external.instantiate[each.key].result["path"]
-    vm_ids     = join(",", sort(var.vm_ids))
+    vm_id      = var.vm_ids[each.key]
   }
 
   provisioner "local-exec" {

@@ -1,6 +1,8 @@
+# flakes created from templates
+terraform/modules/vms_nixos/nixos/flake.nix
 terraform/modules/k3s/nixos/flake.nix
-images/home-assistant/.config
 
+images/home-assistant/.config
 
 # tgz in helm charts
 **/charts/**/*.tgz

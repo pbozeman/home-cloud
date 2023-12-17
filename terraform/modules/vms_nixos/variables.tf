@@ -15,6 +15,7 @@ variable "nixos_vms" {
     gateway               = string
     cores                 = number
     memory                = number
+    host_id               = string
     data_disk_size        = number
     username              = string
     pci_passthrough_addrs = optional(list(string))

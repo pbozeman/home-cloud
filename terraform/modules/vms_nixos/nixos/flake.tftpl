@@ -1,4 +1,4 @@
-{ 
+{
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-unstable";
 
@@ -9,8 +9,15 @@
   };
 
   outputs = { nixpkgs, disko, ... }: {
-    nixosConfigurations.template = nixpkgs.lib.nixosSystem {
+    %{ for host, values in nodes ~}
+    nixosConfigurations.${host} = let
+      hostname = "${host}";
+      hostId = "${values.host_id}";
+    in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = {
+        inherit hostname hostId;
+      };
       modules = [
         ./base.nix
         disko.nixosModules.disko
@@ -23,5 +30,6 @@
         }
       ];
     };
+    %{ endfor ~}
   };
 }

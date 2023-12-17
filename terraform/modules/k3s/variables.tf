@@ -1,5 +1,5 @@
 variable "vm_ids" {
-  type = list(number)
+  type = map(string)
 }
 
 variable "k3s_name" {

@@ -1,3 +1,7 @@
+locals {
+  flake_path = "./${path.module}/nixos"
+}
+
 # TODO: consider moving this to the top of the heirarchy and
 # using it form the pve nodes too. Testing/iterating from here for now.
 resource "tls_private_key" "host_ssh_key" {
@@ -36,6 +40,16 @@ resource "proxmox_virtual_environment_file" "nixos_cloud_config_vendor" {
     # This must end in ".yml"
     file_name = "nixos-${each.key}-cloud-config-vendor.yml"
   }
+}
+
+# TODO: consider merging all the flakes
+resource "local_file" "flake" {
+  content = templatefile("${local.flake_path}/flake.tftpl", {
+    nodes = var.nixos_vms
+  })
+
+  filename        = "${local.flake_path}/flake.nix"
+  file_permission = "600"
 }
 
 resource "proxmox_virtual_environment_vm" "nixos_vms" {
@@ -131,7 +145,7 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     command = <<EOF
       set -e
       cd ${path.module}/nixos
-      nix run github:numtide/nixos-anywhere -- --flake .#template ${each.value.username}@${each.value.ip} --build-on-remote
+      nix run github:numtide/nixos-anywhere -- --flake .#${each.key} ${each.value.username}@${each.value.ip} --build-on-remote
     EOF
   }
 
@@ -157,5 +171,5 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
 }
 
 output "ids" {
-  value = [for v in values(proxmox_virtual_environment_vm.nixos_vms) : v.id]
+  value = { for k, v in proxmox_virtual_environment_vm.nixos_vms : k => v.id }
 }
