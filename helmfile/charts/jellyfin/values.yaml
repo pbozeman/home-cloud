@@ -1,6 +1,6 @@
 nfs_pv:
   server: nas-01
-  path: /data
+  path: /storage/media
   capacity: 256Gi
 
 jellyfin:
