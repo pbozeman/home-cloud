@@ -8,7 +8,7 @@ variable "nas_nodes" {
     host_id = string
 
     shares = map(object({
-      quota         = string
+      quota         = optional(string, "none")
       compression   = optional(string, "on")
       auto-snapshot = optional(bool, false)
       atime         = optional(string, "off")

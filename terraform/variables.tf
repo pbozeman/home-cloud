@@ -154,12 +154,15 @@ variable "nixos_nas_vms" {
     pci_passthrough_addrs = list(string)
     zfs_disks             = list(string)
 
+    # defaults are supplied in nas/variable.tf
+    # TODO: decide if we want to have all defaults at the top
+    # level instead, as a form of global documentation
     shares = map(object({
-      quota         = string
-      compression   = optional(string, "on")
-      auto-snapshot = optional(bool, false)
-      atime         = optional(string, "off")
-      nfs           = optional(string, "off")
+      quota         = optional(string)
+      compression   = optional(string)
+      auto-snapshot = optional(bool)
+      atime         = optional(string)
+      nfs           = optional(string)
     }))
 
     # set to true in tfvars for a vm on first install, and then delete
