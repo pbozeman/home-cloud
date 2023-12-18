@@ -154,6 +154,13 @@ variable "nixos_nas_vms" {
     pci_passthrough_addrs = list(string)
     zfs_disks             = list(string)
 
+    shares = map(object({
+      quota         = string
+      compression   = optional(string, "on")
+      auto-snapshot = optional(bool, false)
+      atime         = optional(string, "off")
+    }))
+
     # set to true in tfvars for a vm on first install, and then delete
     # the setting for the vm
     danger_wipe_zfs_disks_and_initialize = optional(bool, false)
