@@ -19,6 +19,7 @@
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.supportedFilesystems = [ "zfs" ];
   boot.extraModulePackages = [ ];
+  boot.zfs.devNodes = "/dev/disk/by-partuuid";
   boot.zfs.extraPools = [ "storage" ];
   boot.zfs.forceImportRoot = false;
 

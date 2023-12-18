@@ -157,21 +157,29 @@ resource "proxmox_virtual_environment_vm" "nixos_vms" {
     EOF
   }
 
+  # Create zfspool, if requested.
+  # I tried to do this inside the nix files, but didn't seem to have access
+  # to the necessary utils in the postInstall hooks.
   #
-  # wait for the node to be available post switch
-  #
-  # Some following provisioners use local-exec that also do (e.g. nix-build).
-  # remote-exec is more robust in retries. Use it here to make sure the node
-  # is fully ready.
+  # NOTE: the false version of the branch below still executes a command
+  # on the new vm. This provides a check the vm is ready.
   #
   # TODO: add keys via terraform so that we don't have to rely on the user's
   # private key
+  #
   provisioner "remote-exec" {
-    inline = ["true"]
+    inline = [<<EOF
+      %{if each.value.danger_wipe_zfs_disks_and_initialize}
+        zpool create -o ashift=12 storage raidz ${join(" ", each.value.zfs_disks)}
+      %{else}
+        true
+      %{endif}
+    EOF
+    ]
 
     connection {
       type        = "ssh"
-      user        = each.value.username
+      user        = "root"
       private_key = file("~/.ssh/id_ed25519")
       host        = each.value.ip
     }

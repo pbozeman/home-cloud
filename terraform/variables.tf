@@ -152,7 +152,7 @@ variable "nixos_nas_vms" {
     data_disk_size        = number
     username              = string
     pci_passthrough_addrs = list(string)
-    zfs_disks             = map(string)
+    zfs_disks             = list(string)
 
     # set to true in tfvars for a vm on first install, and then delete
     # the setting for the vm

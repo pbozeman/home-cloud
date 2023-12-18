@@ -17,6 +17,7 @@
   boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.supportedFilesystems = [ "zfs" ];
   boot.extraModulePackages = [ ];
+  boot.zfs.devNodes = "/dev/disk/by-partuuid";
   boot.zfs.extraPools = [ "storage" ];
   boot.zfs.forceImportRoot = false;
 
@@ -25,9 +26,6 @@
   networking.hostName = hostname;
   networking.useNetworkd = true;
   networking.hostId = hostId;
-
-  services.zfs.autoScrub.enable = true;
-  services.zfs.trim.enable = true;
 
   services.cloud-init.enable = true;
   services.cloud-init.network.enable = true;
@@ -40,4 +38,11 @@
       KbdInteractiveAuthentication = false;
     };
   };
+
+  services.zfs.autoScrub.enable = true;
+  services.zfs.trim.enable = true;
+
+  environment.systemPackages = with pkgs; [
+    zfs
+  ];
 }
