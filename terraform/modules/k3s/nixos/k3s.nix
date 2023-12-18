@@ -104,6 +104,7 @@
   environment.systemPackages = with pkgs; [
     nfs-utils
     jq
+    pciutils
   ];
 
   # https://github.com/longhorn/longhorn/issues/2166
