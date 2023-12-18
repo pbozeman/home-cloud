@@ -159,6 +159,7 @@ variable "nixos_nas_vms" {
       compression   = optional(string, "on")
       auto-snapshot = optional(bool, false)
       atime         = optional(string, "off")
+      nfs           = optional(string, "off")
     }))
 
     # set to true in tfvars for a vm on first install, and then delete

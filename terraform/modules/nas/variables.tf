@@ -12,6 +12,7 @@ variable "nas_nodes" {
       compression   = optional(string, "on")
       auto-snapshot = optional(bool, false)
       atime         = optional(string, "off")
+      nfs           = optional(string, "off")
     }))
   }))
 }

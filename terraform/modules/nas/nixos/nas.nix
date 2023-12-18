@@ -60,9 +60,6 @@
     lockdPort = 4001;
     mountdPort = 4002;
     statdPort = 4000;
-    #exports = ''
-    #  /data 192.168.10.0/24(rw,sync,no_subtree_check)
-    #'';
   };
 
   services.mullvad-vpn = {

@@ -48,6 +48,7 @@ resource "null_resource" "datasets" {
       zfs set compression=${value.compression} $NAME
       zfs set atime=${value.atime} $NAME
       zfs set com.sun:auto-snapshot=${value.auto-snapshot} $NAME
+      zfs set sharenfs=${value.nfs} $NAME
       %{endfor}
     EOF
     ]
