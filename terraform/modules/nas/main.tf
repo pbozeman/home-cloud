@@ -20,6 +20,9 @@ data "external" "instantiate" {
   ]
 }
 
+# TODO: while creating the datasets with a for loop was easy to implement,
+# it makes it such that we can not see what's going to happen during
+# planning. Split this into different resources.
 resource "null_resource" "datasets" {
   for_each = var.nas_nodes
 
