@@ -125,6 +125,7 @@ module "nas" {
   vm_ids = module.vms_nixos.ids
 
   nas_nodes = var.nixos_nas_vms
+  kopia     = var.kopia
 }
 
 module "k3s" {

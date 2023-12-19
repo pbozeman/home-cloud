@@ -1,6 +1,7 @@
 # flakes created from templates
 terraform/modules/vms_nixos/nixos/flake.nix
 terraform/modules/k3s/nixos/flake.nix
+terraform/modules/nas/nixos/flake.nix
 
 images/home-assistant/.config
 

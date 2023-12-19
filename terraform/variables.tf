@@ -185,6 +185,16 @@ variable "nixos_k3s_vms" {
   }))
 }
 
+variable "kopia" {
+  type = object({
+    b2_bucket          = string
+    b2_key_id          = string
+    b2_application_key = string
+    repo_password      = string
+  })
+  sensitive = true
+}
+
 variable "proxmox_endpoint" {
   type = string
 }

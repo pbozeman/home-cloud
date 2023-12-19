@@ -16,3 +16,13 @@ variable "nas_nodes" {
     }))
   }))
 }
+
+variable "kopia" {
+  type = object({
+    b2_bucket          = string
+    b2_key_id          = string
+    b2_application_key = string
+    repo_password      = string
+  })
+  sensitive = true
+}

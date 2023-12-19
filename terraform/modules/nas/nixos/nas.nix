@@ -4,6 +4,7 @@
   modulesPath,
   hostname,
   hostId,
+  kopiaAuth,
   ... }: {
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
@@ -74,9 +75,40 @@
   };
 
   environment.systemPackages = with pkgs; [
+    btop
     jq
+    kopia
     mullvad
     mullvad-vpn
     zfs
   ];
+
+  # oneshot job to create kopia repo
+  systemd.services.kopiaRepo = {
+    description = "Create Kopia Repo";
+    serviceConfig.Type = "oneshot";
+
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network.target" "multi-user.target" ];
+
+    script = with pkgs; ''
+      # HOME is needed to create the cache
+      export HOME="/root"
+      export KOPIA_CHECK_FOR_UPDATES=false
+
+      # TODO: parse responses to make this a bit smarter about when
+      # and how to do error recovery (keeping in mind that we are in
+      # a set -e enviornment from systemd)
+      ${kopia}/bin/kopia repository connect b2 \
+          --bucket="${kopiaAuth.b2_bucket}" \
+          --key-id="${kopiaAuth.b2_key_id}" \
+          --key="${kopiaAuth.b2_application_key}" \
+          --password="${kopiaAuth.repo_password}" || \
+              ${kopia}/bin/kopia repository create b2 \
+                 --bucket="${kopiaAuth.b2_bucket}" \
+                 --key-id="${kopiaAuth.b2_key_id}" \
+                 --key="${kopiaAuth.b2_application_key}" \
+                 --password="${kopiaAuth.repo_password}"
+    '';
+  };
 }
