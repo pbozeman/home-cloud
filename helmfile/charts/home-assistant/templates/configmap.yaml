@@ -66,22 +66,10 @@ data:
         entities:
           light.ames_light:
             state: "on"
-            brightness: 150
-          light.ram_light:
-            state: "on"
-            brightness: 150
-          light.main_bedroom_ceiling_lights:
-            state: "off"
-          light.hallway_main_lights:
-            state: "off"
+            brightness: 75
           light.kitchen_ceiling_lights:
             state: "on"
-            brightness: 150
-          light.dining_room_chandelier:
-            state: "on"
-            brightness: 150
-          light.nook_light:
-            state: "off"
+            brightness: 75
 
     input_boolean:
       goodnight_mode:
