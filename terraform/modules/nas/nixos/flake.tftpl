@@ -6,12 +6,13 @@
     nixosConfigurations.${host} = let
       hostname = "${host}";
       hostId = "${values.host_id}";
+      shares = builtins.fromJSON ''${jsonencode(values.shares)}'';
       kopiaAuth = builtins.fromJSON ''${jsonencode(kopia)}'';
 
     in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit hostname hostId kopiaAuth;
+        inherit hostname hostId shares kopiaAuth;
       };
       modules = [
         ./nas.nix

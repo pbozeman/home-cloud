@@ -163,6 +163,7 @@ variable "nixos_nas_vms" {
       auto-snapshot = optional(bool)
       atime         = optional(string)
       nfs           = optional(string)
+      backup        = optional(bool)
     }))
 
     # set to true in tfvars for a vm on first install, and then delete

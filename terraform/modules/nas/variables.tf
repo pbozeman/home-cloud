@@ -13,6 +13,7 @@ variable "nas_nodes" {
       auto-snapshot = optional(bool, false)
       atime         = optional(string, "off")
       nfs           = optional(string, "off")
+      backup        = optional(bool, false)
     }))
   }))
 }
