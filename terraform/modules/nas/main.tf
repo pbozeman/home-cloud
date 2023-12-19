@@ -39,6 +39,7 @@ resource "null_resource" "datasets" {
       host        = each.value.ip
     }
 
+    # TODO: add optional chmod and chown of the dataset dir
     inline = [<<EOF
       set -e
       %{for name, value in each.value.shares}

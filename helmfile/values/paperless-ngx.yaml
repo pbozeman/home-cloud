@@ -1,0 +1,55 @@
+env:
+  PAPERLESS_CONSUMER_POLLING: 5
+  PAPERLESS_FILENAME_FORMAT: "{created_year}-{created_month}-{created_day}-{title}"
+  PAPERLESS_TASK_WORKERS: 4
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 2Gi
+  limits:
+    cpu: 4
+    memory: "4Gi"
+
+service:
+  main:
+    ports:
+      http:
+        port: 8000
+
+ingress:
+  main:
+    enabled: true
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/proxy-body-size: 64m
+
+persistence:
+  data:
+    enabled: true
+    storageClass: longhorn
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  media:
+    enabled: true
+    type: nfs
+    server: nas-01
+    path: /storage/paperless-ngx/media
+  export:
+    enabled: true
+    type: nfs
+    server: nas-01
+    path: /storage/paperless-ngx/export
+  consume:
+    enabled: true
+    type: nfs
+    server: nas-01
+    path: /storage/paperless-ngx/consume
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      enabled: true
+      storageClass: longhorn
+      size: 8Gi

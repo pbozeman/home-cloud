@@ -1,4 +1,13 @@
 repositories:
+  # TODO: there is good stuff in these gabe charts. Consider converting
+  # home-assistant to them.  Also, when continuing to use custom charts
+  # look into using bjw-s.github.io/helm-charts for the common lib.  It
+  # looks like it would clean up a lot of repetition in the charts,
+  # e.g. a lot of the service/ingress templates are identical in my
+  # charts.
+  - name: gabe565
+    url: https://charts.gabe565.com/
+
   - name: grafana
     url: https://grafana.github.io/helm-charts
 
