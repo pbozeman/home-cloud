@@ -1,7 +1,9 @@
 env:
   PAPERLESS_CONSUMER_POLLING: 5
   PAPERLESS_FILENAME_FORMAT: "{created_year}-{created_month}-{created_day}-{title}"
-  PAPERLESS_TASK_WORKERS: 4
+  PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
+  PAPERLESS_TASK_WORKERS: 6
+  PAPERLESS_EMAIL_TASK_CRON: "*/1 * * * *"
 
 resources:
   requests:
