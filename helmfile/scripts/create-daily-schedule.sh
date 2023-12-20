@@ -2,7 +2,7 @@
 
 SCHEDULE_NAME="daily-home"
 SCHEDULE_TIME="0 3 * * *"
-NAMESPACES="home-automation"
+NAMESPACES="home-automation,media,apps"
 
 # Check if the schedule already exists
 velero schedule get $SCHEDULE_NAME >/dev/null 2>&1
