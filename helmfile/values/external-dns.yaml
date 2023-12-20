@@ -1,0 +1,6 @@
+# the default chart includes services, we don't want that.
+# and dropping ingress and using crd's only should be considered
+provider: cloudflare
+
+sources:
+  - ingress

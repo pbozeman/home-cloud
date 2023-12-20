@@ -5,6 +5,9 @@ repositories:
   # looks like it would clean up a lot of repetition in the charts,
   # e.g. a lot of the service/ingress templates are identical in my
   # charts.
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
   - name: gabe565
     url: https://charts.gabe565.com/
 

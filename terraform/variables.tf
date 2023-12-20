@@ -106,12 +106,6 @@ variable "k3s_ingress_ip" {
   type = string
 }
 
-variable "k3s_services" {
-  type = map(object({
-    ip = string
-  }))
-}
-
 variable "pve_nodes" {
   type = map(object({
     ip  = string

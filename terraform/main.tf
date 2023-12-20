@@ -11,7 +11,6 @@ locals {
     var.nixos_dev_vms,
     var.nixos_nas_vms,
     var.nixos_k3s_vms,
-    var.k3s_services,
   )
 
   round_robin_dns = {

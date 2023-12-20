@@ -64,3 +64,16 @@ releases:
       - ../values/nginx-ingress.yaml
     secrets:
       - ../secrets/nginx-ingress.yaml
+
+  #
+  # DNS
+  #
+  - name: external-dns
+    namespace: external-dns
+    createNamespace: true
+    chart: bitnami/external-dns
+    version: 6.28.6
+    values:
+      - ../values/external-dns.yaml
+    secrets:
+      - ../secrets/external-dns.yaml
