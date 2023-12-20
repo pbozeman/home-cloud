@@ -3,7 +3,7 @@ releases:
   # paperless-ngx
   #
   - name: paperless-ngx
-    namespace: apps
+    namespace: paperless-ngx
     chart: gabe565/paperless-ngx
     version: 0.9.2
     secrets:
