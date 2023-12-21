@@ -10,3 +10,20 @@ releases:
       - ../secrets/paperless-ngx.yaml
     values:
       - ../values/paperless-ngx.yaml
+
+  #
+  # immich
+  #
+  - name: immich
+    namespace: immich
+    chart: immich/immich
+    version: 0.3.0
+    secrets:
+      - ../secrets/immich.yaml
+    values:
+      - ../values/immich.yaml
+    hooks:
+      - events: ["presync"]
+        showlogs: true
+        command: "kubectl"
+        args: ["apply", "-f", "../manifests/immich/"]

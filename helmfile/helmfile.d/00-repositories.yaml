@@ -14,6 +14,9 @@ repositories:
   - name: grafana
     url: https://grafana.github.io/helm-charts
 
+  - name: immich
+    url: https://immich-app.github.io/immich-charts
+
   - name: ingress-nginx
     url: https://kubernetes.github.io/ingress-nginx
 
