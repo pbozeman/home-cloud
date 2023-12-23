@@ -64,6 +64,26 @@
     statdPort = 4000;
   };
 
+  services.samba = {
+    enable = true;
+    securityType = "user";
+    openFirewall = true;
+    extraConfig = ''
+      workgroup = WORKGROUP
+      server role = standalone server
+      dns proxy = no
+      vfs objects = acl_xattr catia fruit streams_xattr;
+
+      # Security
+      client ipc max protocol = SMB3
+      client ipc min protocol = SMB2_10
+      client max protocol = SMB3
+      client min protocol = SMB2_10
+      server max protocol = SMB3
+      server min protocol = SMB2_10
+    '';
+  };
+
   services.mullvad-vpn = {
     enable = true;
   };
