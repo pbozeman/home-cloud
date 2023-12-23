@@ -46,13 +46,13 @@ variable "kids_passphrase" {
   type = string
 }
 
-variable "guest_ssid" {
-  type = string
-}
+#variable "guest_ssid" {
+#  type = string
+#}
 
-variable "guest_passphrase" {
-  type = string
-}
+#variable "guest_passphrase" {
+#  type = string
+#}
 
 variable "switches" {
   type = map(object({
@@ -66,13 +66,29 @@ variable "switches" {
   }))
 }
 
-variable "clients" {
+variable "iot_clients" {
   type = map(object({
     mac               = string
     name              = string
     ip                = string
     allow_internet    = bool
     allow_k3s_ingress = bool
+  }))
+}
+
+variable "lan_clients" {
+  type = map(object({
+    mac  = string
+    name = string
+    ip   = string
+  }))
+}
+
+variable "trusted_clients" {
+  type = map(object({
+    mac  = string
+    name = string
+    ip   = string
   }))
 }
 

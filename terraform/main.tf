@@ -1,12 +1,12 @@
 locals {
-  cloudkey_host = {
-    cloudkey = {
-      ip = var.cloudkey_01_ip
+  unifi_host = {
+    unifi = {
+      ip = var.unifi_ip
     }
   }
 
   host_dns = merge(
-    local.cloudkey_host,
+    local.unifi_host,
     var.pve_nodes,
     var.nixos_dev_vms,
     var.nixos_nas_vms,
@@ -44,7 +44,10 @@ module "unifi" {
   local_dns_ip = var.local_dns_ip
 
   switches = var.unifi_switches
-  clients  = var.unifi_clients
+
+  iot_clients     = var.unifi_iot_clients
+  lan_clients     = var.unifi_lan_clients
+  trusted_clients = var.unifi_trusted_clients
 
   k3s_ingress_ip = var.k3s_ingress_ip
 
@@ -60,9 +63,9 @@ module "unifi" {
   iot_ssid       = var.iot_ssid
   iot_passphrase = var.iot_passphrase
 
-  guest_vlan       = 50
-  guest_ssid       = var.guest_ssid
-  guest_passphrase = var.guest_passphrase
+  guest_vlan = 50
+  #guest_ssid       = var.guest_ssid
+  #guest_passphrase = var.guest_passphrase
 }
 
 module "proxmox" {

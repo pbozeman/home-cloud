@@ -61,14 +61,14 @@ variable "kids_passphrase" {
   sensitive = true
 }
 
-variable "guest_ssid" {
-  type = string
-}
+#variable "guest_ssid" {
+#  type = string
+#}
 
-variable "guest_passphrase" {
-  type      = string
-  sensitive = true
-}
+#variable "guest_passphrase" {
+#  type      = string
+#  sensitive = true
+#}
 
 variable "unifi_switches" {
   type = map(object({
@@ -82,9 +82,7 @@ variable "unifi_switches" {
   }))
 }
 
-# FIXME: the allow_* are actually only used on the IoT vlan. It is misleanding
-# to mix the iot and regular clients
-variable "unifi_clients" {
+variable "unifi_iot_clients" {
   type = map(object({
     mac               = string
     name              = string
@@ -94,7 +92,23 @@ variable "unifi_clients" {
   }))
 }
 
-variable "cloudkey_01_ip" {
+variable "unifi_lan_clients" {
+  type = map(object({
+    mac  = string
+    name = string
+    ip   = string
+  }))
+}
+
+variable "unifi_trusted_clients" {
+  type = map(object({
+    mac  = string
+    name = string
+    ip   = string
+  }))
+}
+
+variable "unifi_ip" {
   type = string
 }
 
