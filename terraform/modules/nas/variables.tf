@@ -27,3 +27,8 @@ variable "kopia" {
   })
   sensitive = true
 }
+
+variable "tailscaleKey" {
+  type      = string
+  sensitive = true
+}

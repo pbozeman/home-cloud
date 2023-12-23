@@ -4,9 +4,9 @@ locals {
 
 resource "local_file" "flake" {
   content = templatefile("${local.flake_path}/flake.tftpl", {
-    nodes = var.nas_nodes
-    kopia = var.kopia
-
+    nodes        = var.nas_nodes
+    kopia        = var.kopia
+    tailscaleKey = var.tailscaleKey
   })
 
   filename        = "${local.flake_path}/flake.nix"

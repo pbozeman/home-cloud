@@ -8,11 +8,12 @@
       hostId = "${values.host_id}";
       shares = builtins.fromJSON ''${jsonencode(values.shares)}'';
       kopiaAuth = builtins.fromJSON ''${jsonencode(kopia)}'';
+      tailscaleKey = builtins.fromJSON ''${jsonencode(tailscaleKey)}'';
 
     in nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
-        inherit hostname hostId shares kopiaAuth;
+        inherit hostname hostId shares kopiaAuth tailscaleKey;
       };
       modules = [
         ./nas.nix

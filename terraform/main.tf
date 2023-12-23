@@ -128,6 +128,8 @@ module "nas" {
 
   nas_nodes = var.nixos_nas_vms
   kopia     = var.kopia
+
+  tailscaleKey = var.tailscaleKey
 }
 
 module "k3s" {
