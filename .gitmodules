@@ -4,3 +4,6 @@
 [submodule "images/home-assistant/repos/fordpass-ha"]
 	path = images/home-assistant/injected/repos/fordpass-ha
 	url = git@github.com:itchannel/fordpass-ha.git
+[submodule "images/home-assistant/injected/repos/home-assistant-miele"]
+	path = images/home-assistant/injected/repos/home-assistant-miele
+	url = git@github.com:HomeAssistant-Mods/home-assistant-miele.git

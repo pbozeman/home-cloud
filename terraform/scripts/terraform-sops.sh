@@ -6,7 +6,5 @@ set -e
 cd "$(dirname "$(readlink -f "$0")")"
 cd ..
 
-TEMP_TFVARS="$(mktemp).tfvars"
-trap "rm -f $TEMP_TFVARS" EXIT
-sops -d secret.tfvars >"$TEMP_TFVARS"
-terraform $@ -var-file="$TEMP_TFVARS"
+sops -d secret.tfvars > terraform.tfvars
+terraform $@
