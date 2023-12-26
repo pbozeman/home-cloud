@@ -82,6 +82,24 @@
       server max protocol = SMB3
       server min protocol = SMB2_10
     '';
+
+    shares = let
+      # Filter shares to include only those with 'smb-name' set and not null.
+      filteredShares = lib.filterAttrs (key: shareOpts:
+        shareOpts ? "smb-name" && shareOpts."smb-name" != null
+      ) shares;
+
+      # Convert the filtered shares into the desired Samba configuration.
+      sambaShares = lib.mapAttrs' (key: shareOpts: lib.nameValuePair (shareOpts."smb-name") {
+        path = "storage/${key}";
+        browseable = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0644";
+        "directory mask" = "0755";
+      }) filteredShares;
+    in
+      sambaShares;
   };
 
   services.mullvad-vpn = {

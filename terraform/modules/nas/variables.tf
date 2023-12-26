@@ -14,6 +14,7 @@ variable "nas_nodes" {
       atime         = optional(string, "off")
       nfs           = optional(string, "off")
       backup        = optional(bool, false)
+      smb-name      = optional(string)
     }))
   }))
 }

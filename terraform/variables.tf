@@ -172,6 +172,7 @@ variable "nixos_nas_vms" {
       atime         = optional(string)
       nfs           = optional(string)
       backup        = optional(bool)
+      smb-name      = optional(string)
     }))
 
     # set to true in tfvars for a vm on first install, and then delete
