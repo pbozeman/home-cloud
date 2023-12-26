@@ -4,6 +4,7 @@
   modulesPath,
   hostname,
   hostId,
+  users,
   shares,
   kopiaAuth,
   tailscaleKey,
@@ -54,6 +55,11 @@
       KbdInteractiveAuthentication = false;
     };
   };
+
+  users.users = lib.attrsets.mapAttrs (name: value: {
+    isNormalUser = true;
+    shell = "/run/current-system/sw/bin/nologin";
+  }) users;
 
   services.nfs.server = {
     enable = true;

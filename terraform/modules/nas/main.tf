@@ -94,3 +94,29 @@ resource "null_resource" "deploy" {
     null_resource.datasets
   ]
 }
+
+resource "null_resource" "samba_password" {
+  for_each = var.nas_nodes
+
+  triggers = {
+    # TODO: reduce scope
+    vars = sha1(jsonencode(var.nas_nodes))
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = file("~/.ssh/id_ed25519")
+      host        = each.value.ip
+    }
+
+    inline = [<<EOF
+      set -e
+      %{for name, value in each.value.users}
+      echo -e "${value.smb_password}\n${value.smb_password}" | smbpasswd -a -s ${name}
+      %{endfor}
+    EOF
+    ]
+  }
+}

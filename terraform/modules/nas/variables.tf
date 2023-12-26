@@ -7,6 +7,10 @@ variable "nas_nodes" {
     ip      = string
     host_id = string
 
+    users = map(object({
+      smb_password = string
+    }))
+
     shares = map(object({
       quota         = optional(string, "none")
       compression   = optional(string, "on")

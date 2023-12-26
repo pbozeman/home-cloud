@@ -162,6 +162,10 @@ variable "nixos_nas_vms" {
     pci_passthrough_addrs = list(string)
     zfs_disks             = list(string)
 
+    users = map(object({
+      smb_password = string
+    }))
+
     # defaults are supplied in nas/variable.tf
     # TODO: decide if we want to have all defaults at the top
     # level instead, as a form of global documentation
