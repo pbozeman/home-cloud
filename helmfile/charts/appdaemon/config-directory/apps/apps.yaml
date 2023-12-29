@@ -12,6 +12,7 @@ kitchen_motion_light:
   entity: light.kitchen_ceiling_lights
   night_mode_entity: scene.kitchen_night
   sensors: [binary_sensor.entry_occupancy, binary_sensor.kitchen_occupancy]
+  delay_sec: 900 # 15m
 
 tv_time:
   module: tv-time
