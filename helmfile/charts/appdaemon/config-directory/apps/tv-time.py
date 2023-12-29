@@ -48,11 +48,6 @@ class TvTime(hass.Hass):
         self.call_service("notify/lg_tv", message=message)
 
     def is_tv_time(self):
-        # ignore the state, in case the kids turned it on by pressing the
-        # pico
-        if self.too_early():
-            return False
-
         return self.get_state(self.tv_time_mode) == "on"
 
     def too_early(self):
