@@ -21,7 +21,7 @@ taint_resources() {
 }
 
 # Taint VMs
-vm_pattern="module.vms.proxmox_virtual_environment_vm.nixos_vms\[\"k3s-.*\"\]"
+vm_pattern="module.vms_nixos.proxmox_virtual_environment_vm.nixos_vms\[\"k3s-.*\"\]"
 taint_resources "$vm_pattern"
 
 # Taint k3s deployment

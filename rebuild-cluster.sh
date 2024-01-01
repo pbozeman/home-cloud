@@ -3,7 +3,7 @@
 set -e
 
 top="$(dirname $(readlink -f $0))/"
-vm_tf="$top"/terraform/modules/vms/nixos_vms.tf
+vm_tf="$top"/terraform/modules/vms_nixos/nixos_vms.tf
 retry_interval=5
 max_retries=3
 
