@@ -27,3 +27,15 @@ releases:
         showlogs: true
         command: "kubectl"
         args: ["apply", "-f", "../manifests/immich/"]
+
+  #
+  # tandoor
+  #
+  - name: tandoor
+    namespace: tandoor
+    chart: gabe565/tandoor
+    version: 0.8.11
+    secrets:
+      - ../secrets/tandoor.yaml
+    values:
+      - ../values/tandoor.yaml
