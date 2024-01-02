@@ -6,6 +6,12 @@ light_group_all:
   module: light-group
   class: LightGroupAll
 
+string_light_follows_path:
+  module: follower-light
+  class: FollowerLight
+  leader: light.exterior_pathway_lights
+  follower: light.string_lights
+
 kitchen_motion_light:
   module: motion-light
   class: MotionLight
