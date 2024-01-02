@@ -12,6 +12,13 @@ string_light_follows_path:
   leader: light.exterior_pathway_lights
   follower: light.string_lights
 
+lamps_follow_dining_room_on:
+  module: follower-light
+  class: FollowerLight
+  leader: light.dining_room_chandelier
+  follower: light.common_lights
+  ignore_off: True
+
 kitchen_motion_light:
   module: motion-light
   class: MotionLight
