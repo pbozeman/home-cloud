@@ -34,6 +34,15 @@ data:
         certfile: caseta.crt
         ca_certs: caseta-bridge.crt
 
+    light:
+      - platform: group
+        name: "Common Lights"
+        entities:
+          - light.dining_room_chandelier
+          - light.ames_light
+          - light.nook_light
+          - light.ram_light
+
     scene:
       - name: Kitchen Night
         icon: "mdi:lightbulb-night"
