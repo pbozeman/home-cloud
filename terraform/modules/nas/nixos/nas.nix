@@ -108,10 +108,6 @@
       sambaShares;
   };
 
-  services.mullvad-vpn = {
-    enable = true;
-  };
-
   networking.firewall = {
     enable = true;
     # for NFSv3; view with `rpcinfo -p`
@@ -123,8 +119,6 @@
     btop
     jq
     kopia
-    mullvad
-    mullvad-vpn
     zfs
   ];
 
