@@ -63,9 +63,9 @@ module "unifi" {
   iot_ssid       = var.iot_ssid
   iot_passphrase = var.iot_passphrase
 
-  guest_vlan = 50
-  #guest_ssid       = var.guest_ssid
-  #guest_passphrase = var.guest_passphrase
+  guest_vlan       = 50
+  guest_ssid       = var.guest_ssid
+  guest_passphrase = var.guest_passphrase
 }
 
 module "proxmox" {

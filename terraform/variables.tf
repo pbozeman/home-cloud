@@ -61,14 +61,14 @@ variable "kids_passphrase" {
   sensitive = true
 }
 
-#variable "guest_ssid" {
-#  type = string
-#}
+variable "guest_ssid" {
+  type = string
+}
 
-#variable "guest_passphrase" {
-#  type      = string
-#  sensitive = true
-#}
+variable "guest_passphrase" {
+  type      = string
+  sensitive = true
+}
 
 variable "unifi_switches" {
   type = map(object({

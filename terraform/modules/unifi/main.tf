@@ -29,9 +29,7 @@ locals {
     (var.trusted_ssid) = { network = "Trusted", passphrase = var.trusted_passphrase },
     (var.kids_ssid)    = { network = "Kids", passphrase = var.kids_passphrase },
     (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase },
-    # temporarily disable during transition - old google mesh is put on a guest_vlan
-    # port profile for now
-    #(var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
+    (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
   }
 
   # the 1.1.1.1 is a hack to provide at least 1 element in the array. Unifi

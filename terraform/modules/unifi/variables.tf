@@ -46,13 +46,13 @@ variable "kids_passphrase" {
   type = string
 }
 
-#variable "guest_ssid" {
-#  type = string
-#}
+variable "guest_ssid" {
+  type = string
+}
 
-#variable "guest_passphrase" {
-#  type = string
-#}
+variable "guest_passphrase" {
+  type = string
+}
 
 variable "switches" {
   type = map(object({
