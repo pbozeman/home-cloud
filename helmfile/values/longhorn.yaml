@@ -9,23 +9,7 @@ defaultSettings:
   nodeDownPodDeletionPolicy: "delete-both-statefulset-and-deployment-pod"
   nodeDrainPolicy: "always-allow"
 image:
-  # FIXME: this is/was a quick/test of a private/unreleased
-  # external-snapshotter image.
-  #
-  # I think it fixes the
-  #   "failed to remove VolumeSnapshotBeingCreated annotation on the content snapcontent
-  #   <snip>...
-  #   the object has been modified; please apply your changes to the latest version and try again"
-  # error. from the snapshotter
-  #
-  # It looks like this was fixed in
-  # https://github.com/kubernetes-csi/external-snapshotter/pull/974/commits/8fe4025b1971ea56d4479524d1be0af600c63825
-  # but it hasn't been released yet.
-  #
-  # Either revert this, or move the build of the snapshotter into images until
-  # a release is made by the k8s team, and then remove all together once
-  # the longhorn team pulls the fixed image into to their chart by default.
   csi:
     snapshotter:
-      repository: registry.blinkies.io/k8scsi/csi-snapshotter
+      repository: registry.k8s.io/sig-storage/csi-snapshotter
       tag: v6.3.3
