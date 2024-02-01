@@ -220,6 +220,7 @@ variable "proxmox_endpoint" {
   type = string
 }
 
+# TODO: this might be unused and root is assumed. Check.
 variable "proxmox_username" {
   type = string
 }
