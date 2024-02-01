@@ -18,7 +18,8 @@ variable "local_dns_ip" {
 }
 
 variable "proxmox_ssh_privkey" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "proxmox_ssh_pubkey" {
@@ -26,7 +27,8 @@ variable "proxmox_ssh_pubkey" {
 }
 
 variable "proxmox_password" {
-  type = string
+  type      = string
+  sensitive = true
 }
 
 variable "ssh_pubkeys" {
