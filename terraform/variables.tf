@@ -230,6 +230,15 @@ variable "proxmox_password" {
   sensitive = true
 }
 
+variable "proxmox_prometheus_username" {
+  type = string
+}
+
+variable "proxmox_prometheus_password" {
+  type      = string
+  sensitive = true
+}
+
 variable "proxmox_ssh_privkey" {
   type      = string
   sensitive = true

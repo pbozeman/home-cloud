@@ -82,6 +82,9 @@ module "proxmox" {
   proxmox_ssh_privkey = var.proxmox_ssh_privkey
   proxmox_ssh_pubkey  = var.proxmox_ssh_pubkey
 
+  proxmox_prometheus_username = var.proxmox_prometheus_username
+  proxmox_prometheus_password = var.proxmox_prometheus_password
+
   dns_ids = module.cloudflare.ids
 }
 
