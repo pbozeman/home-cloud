@@ -72,6 +72,7 @@ resource "unifi_network" "lan" {
   domain_name   = var.domain_name
   multicast_dns = true
   dhcp_dns      = ["1.1.1.2", "1.0.0.2"]
+  igmp_snooping = true
 
   # I'm not using ipv6, but unifi keeps inserting these back into the config
   # for the default network. Add them explicitly so that the terraform diff
@@ -98,6 +99,7 @@ resource "unifi_network" "network" {
   domain_name   = var.domain_name
   multicast_dns = true
   dhcp_dns      = each.value.dhcp_dns
+  igmp_snooping = true
 
   dhcp_v6_start     = "::2"
   dhcp_v6_stop      = "::7d1"
