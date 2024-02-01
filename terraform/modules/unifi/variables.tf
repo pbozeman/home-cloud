@@ -59,9 +59,11 @@ variable "switches" {
     mac  = string
     name = string
     port_overrides = list(object({
-      number       = number
-      name         = string
-      port_profile = string
+      aggregate_num_ports = optional(number)
+      number              = number
+      name                = string
+      port_profile        = string
+      op_mode             = optional(string, null)
     }))
   }))
 }

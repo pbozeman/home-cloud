@@ -178,9 +178,11 @@ resource "unifi_device" "switches" {
   dynamic "port_override" {
     for_each = each.value.port_overrides
     content {
-      number          = port_override.value.number
-      name            = port_override.value.name
-      port_profile_id = unifi_port_profile.vlan[port_override.value.port_profile].id
+      number              = port_override.value.number
+      name                = port_override.value.name
+      aggregate_num_ports = port_override.value.aggregate_num_ports
+      port_profile_id     = port_override.value.port_profile == null ? null : unifi_port_profile.vlan[port_override.value.port_profile].id
+      op_mode             = port_override.value.op_mode
     }
   }
 
