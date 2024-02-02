@@ -15,7 +15,7 @@ releases:
       - events: ["postsync"]
         showlogs: true
         command: "kubectl"
-        args: ["apply", "-f", "../manifests/monitoring/"]
+        args: ["apply", "-n", "monitoring", "-f", "../manifests/monitoring/"]
 
   #
   # loki
