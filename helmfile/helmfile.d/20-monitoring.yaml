@@ -26,3 +26,15 @@ releases:
     version: 2.9.11
     values:
       - ../values/loki-stack.yaml
+
+  #
+  # prometheus-pve-exporter
+  #
+  - name: prometheus-pve-exporter
+    namespace: monitoring
+    chart: christianknell/prometheus-pve-exporter
+    version: 1.2.1
+    values:
+      - ../values/prometheus-pve-exporter.yaml
+    secrets:
+      - ../secrets/prometheus-pve-exporter.yaml

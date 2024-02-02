@@ -1,0 +1,18 @@
+image:
+  pullPolicy: "IfNotPresent"
+serviceMonitor:
+  additionalLabels:
+    # this is kind of a hack, but this is the default label that
+    # kube-prometheus selects on. The release label doesn't seem
+    # to be used by anything else (e.g. helm), so maybe this is ok?
+    # It was going to be a major pain to tag all the service monitors
+    # with some other common label and still be furture compatible with
+    # new kube-prometheus service monitors.
+    release: "kube-prometheus-stack"
+  enabled: true
+  pveTargets:
+    - pve-01
+    - pve-02
+    - pve-03
+    - pve-04
+    - pve-nas-01
