@@ -56,3 +56,24 @@ resource "null_resource" "repos_upgrade" {
     }
   }
 }
+
+# TODO: I really should start using ansible
+resource "null_resource" "repos_install_extras" {
+  for_each = var.pve_nodes
+
+  provisioner "remote-exec" {
+    inline = [
+      <<EOF
+        set -e
+        apt-get install -y prometheus-node-exporter
+      EOF
+    ]
+
+    connection {
+      type     = "ssh"
+      user     = "root"
+      password = var.proxmox_password
+      host     = each.key
+    }
+  }
+}
