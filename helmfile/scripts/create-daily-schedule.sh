@@ -1,7 +1,9 @@
 #!/bin/sh
 
 SCHEDULE_NAME="daily-home"
-SCHEDULE_TIME="0 3 * * *"
+
+# schedule time is UTC
+SCHEDULE_TIME="0 12 * * *"
 
 # TODO: move to using annotations rather than having to manage
 # lists in the script
