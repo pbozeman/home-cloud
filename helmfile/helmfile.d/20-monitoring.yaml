@@ -30,6 +30,9 @@ releases:
   #
   # prometheus-pve-exporter
   #
+  # FIXME: this works, but only after 2 runs. There are missing
+  # CRDs in the first run, but a second sync works fine. Debug and fix.
+  #
   - name: prometheus-pve-exporter
     namespace: monitoring
     chart: christianknell/prometheus-pve-exporter
