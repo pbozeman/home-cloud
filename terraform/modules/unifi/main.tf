@@ -19,10 +19,11 @@ terraform {
 
 locals {
   vlans = {
-    "Trusted" = { vlan_id = var.trusted_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
-    "Kids"    = { vlan_id = var.kids_vlan, dhcp_dns = ["1.1.1.3", "1.0.0.3"] },
-    "IoT"     = { vlan_id = var.iot_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
-    "Guest"   = { vlan_id = var.guest_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"] },
+    "Trusted"  = { vlan_id = var.trusted_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"], vlan_only = false },
+    "Kids"     = { vlan_id = var.kids_vlan, dhcp_dns = ["1.1.1.3", "1.0.0.3"], vlan_only = false },
+    "IoT"      = { vlan_id = var.iot_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"], vlan_only = false },
+    "Guest"    = { vlan_id = var.guest_vlan, dhcp_dns = ["1.1.1.2", "1.0.0.2"], vlan_only = false },
+    "Starlink" = { vlan_id = var.starlink_vlan, vlan_only = true },
   }
 
   wlans = {
@@ -90,24 +91,34 @@ resource "unifi_network" "network" {
   for_each = local.vlans
   name     = each.key
 
-  purpose       = "corporate"
+  purpose       = each.value.vlan_only ? "vlan-only" : "corporate"
   vlan_id       = each.value.vlan_id
-  subnet        = "192.168.${each.value.vlan_id}.0/24"
-  dhcp_enabled  = true
-  dhcp_start    = "192.168.${each.value.vlan_id}.100"
-  dhcp_stop     = "192.168.${each.value.vlan_id}.254"
-  domain_name   = var.domain_name
-  multicast_dns = true
-  dhcp_dns      = each.value.dhcp_dns
-  igmp_snooping = true
+  subnet        = each.value.vlan_only ? null : "192.168.${each.value.vlan_id}.0/24"
+  dhcp_enabled  = each.value.vlan_only ? null : true
+  dhcp_start    = each.value.vlan_only ? null : "192.168.${each.value.vlan_id}.100"
+  dhcp_stop     = each.value.vlan_only ? null : "192.168.${each.value.vlan_id}.254"
+  domain_name   = each.value.vlan_only ? null : var.domain_name
+  multicast_dns = each.value.vlan_only ? null : true
+  dhcp_dns      = each.value.vlan_only ? null : each.value.dhcp_dns
+  igmp_snooping = each.value.vlan_only ? null : true
 
-  dhcp_v6_start     = "::2"
-  dhcp_v6_stop      = "::7d1"
-  ipv6_pd_interface = "wan"
-  ipv6_pd_start     = "::2"
-  ipv6_pd_stop      = "::7d1"
-  ipv6_ra_priority  = "high"
-  wan_type_v6       = "disabled"
+  dhcp_v6_start     = each.value.vlan_only ? null : "::2"
+  dhcp_v6_stop      = each.value.vlan_only ? null : "::7d1"
+  ipv6_pd_interface = each.value.vlan_only ? null : "wan"
+  ipv6_pd_start     = each.value.vlan_only ? null : "::2"
+  ipv6_pd_stop      = each.value.vlan_only ? null : "::7d1"
+  ipv6_ra_priority  = each.value.vlan_only ? null : "high"
+  wan_type_v6       = each.value.vlan_only ? null : "disabled"
+
+  # this block has the wrong defaults/weird from the provider
+  # keep them to what unifi sets
+  # TODO: see if this can be avoided in future versions
+  dhcp_lease                 = each.value.vlan_only ? 0 : null
+  dhcp_v6_dns_auto           = each.value.vlan_only ? false : null
+  dhcp_v6_lease              = each.value.vlan_only ? 0 : null
+  ipv6_ra_preferred_lifetime = each.value.vlan_only ? 0 : null
+  ipv6_ra_valid_lifetime     = each.value.vlan_only ? 0 : null
+  network_group              = each.value.vlan_only ? "LAN" : null
 }
 
 resource "unifi_wlan" "wlan" {

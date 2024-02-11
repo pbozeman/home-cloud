@@ -66,6 +66,8 @@ module "unifi" {
   guest_vlan       = 50
   guest_ssid       = var.guest_ssid
   guest_passphrase = var.guest_passphrase
+
+  starlink_vlan = 420
 }
 
 module "proxmox" {

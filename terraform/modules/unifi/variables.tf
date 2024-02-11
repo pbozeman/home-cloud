@@ -22,6 +22,10 @@ variable "guest_vlan" {
   type = number
 }
 
+variable "starlink_vlan" {
+  type = number
+}
+
 variable "trusted_ssid" {
   type = string
 }
