@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}"
+  labels:
+    app: "{{ .Chart.Name }}"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: "{{ .Chart.Name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Chart.Name }}"
+    spec:
+      containers:
+        - name: "{{ .Chart.Name }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          resources:
+            requests:
+              memory: "{{ .Values.resources.requests.memory }}"
+              cpu: "{{ .Values.resources.requests.cpu }}"
+            limits:
+              memory: "{{ .Values.resources.limits.memory }}"
+              cpu: "{{ .Values.resources.limits.cpu }}"
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          env:
+            - name: TZ
+              value: {{ .Values.time_zone }}
+          volumeMounts:
+            - name: persistent-storage
+              mountPath: /usr/src/app/store
+      volumes:
+        - name: persistent-storage
+          persistentVolumeClaim:
+            claimName: "{{ .Chart.Name }}-pvc"

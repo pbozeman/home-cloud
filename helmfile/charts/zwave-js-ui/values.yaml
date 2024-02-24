@@ -1,0 +1,29 @@
+image:
+  repository: zwavejs/zwave-js-ui
+  tag: latest
+  pullPolicy: IfNotPresent
+
+container:
+  port: 8091
+
+service:
+  type: ClusterIP
+  targetPort: 8091
+  port: 8091
+
+persistence:
+  size: 100Mi
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 1Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi
+
+mqtt_server: "mqtt://mosquitto-mqtt:1883"
+serial_port: "/dev/ttyACM0"
+
+domain: .home.arpa
+hostname: zwave-js-ui

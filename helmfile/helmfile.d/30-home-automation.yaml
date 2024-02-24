@@ -25,6 +25,20 @@ releases:
       - ../secrets/common.yaml
 
   #
+  # zwave-js-ui
+  #
+  - name: zwave-js-ui
+    namespace: home-automation
+    chart: ../charts/zwave-js-ui
+    version: 1.0.0
+    needs:
+      - home-automation/mosquitto-mqtt
+    values:
+      - ../values/zwave-js-ui.conf
+    secrets:
+      - ../secrets/common.yaml
+
+  #
   # home-assistant
   #
   - name: home-assistant
