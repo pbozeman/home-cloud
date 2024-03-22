@@ -8,8 +8,8 @@ repositories:
   - name: bitnami
     url: https://charts.bitnami.com/bitnami
 
-  - name: christianknell
-    url: https://christianknell.github.io/helm-charts
+  - name: christianhuth
+    url: https://christianhuth.github.io/helm-charts
 
   - name: gabe565
     url: https://charts.gabe565.com/

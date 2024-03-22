@@ -35,7 +35,7 @@ releases:
   #
   - name: prometheus-pve-exporter
     namespace: monitoring
-    chart: christianknell/prometheus-pve-exporter
+    chart: christianhuth/prometheus-pve-exporter
     version: 1.2.1
     values:
       - ../values/prometheus-pve-exporter.yaml
