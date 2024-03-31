@@ -1,14 +1,15 @@
-{ config,
-  lib,
-  pkgs,
-  modulesPath,
-  hostname,
-  hostId,
-  users,
-  shares,
-  kopiaAuth,
-  tailscaleKey,
-  ... }: {
+{ config
+, lib
+, pkgs
+, modulesPath
+, hostname
+, hostId
+, users
+, shares
+, kopiaAuth
+, tailscaleKey
+, ...
+}: {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
   time.timeZone = "America/Los_Angeles";
@@ -36,7 +37,7 @@
     fsType = "vfat";
   };
 
-  swapDevices = [];
+  swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -58,10 +59,12 @@
     };
   };
 
-  users.users = lib.attrsets.mapAttrs (name: value: {
-    isNormalUser = true;
-    shell = "/run/current-system/sw/bin/nologin";
-  }) users;
+  users.users = lib.attrsets.mapAttrs
+    (name: value: {
+      isNormalUser = true;
+      shell = "/run/current-system/sw/bin/nologin";
+    })
+    users;
 
   services.nfs.server = {
     enable = true;
@@ -91,22 +94,27 @@
       server min protocol = SMB2_10
     '';
 
-    shares = let
-      # Filter shares to include only those with 'smb-name' set and not null.
-      filteredShares = lib.filterAttrs (key: shareOpts:
-        shareOpts ? "smb-name" && shareOpts."smb-name" != null
-      ) shares;
+    shares =
+      let
+        # Filter shares to include only those with 'smb-name' set and not null.
+        filteredShares = lib.filterAttrs
+          (key: shareOpts:
+            shareOpts ? "smb-name" && shareOpts."smb-name" != null
+          )
+          shares;
 
-      # Convert the filtered shares into the desired Samba configuration.
-      sambaShares = lib.mapAttrs' (key: shareOpts: lib.nameValuePair (shareOpts."smb-name") {
-        path = "storage/${key}";
-        browseable = "yes";
-        "read only" = "no";
-        "guest ok" = "no";
-        "create mask" = "0644";
-        "directory mask" = "0755";
-      }) filteredShares;
-    in
+        # Convert the filtered shares into the desired Samba configuration.
+        sambaShares = lib.mapAttrs'
+          (key: shareOpts: lib.nameValuePair (shareOpts."smb-name") {
+            path = "storage/${key}";
+            browseable = "yes";
+            "read only" = "no";
+            "guest ok" = "no";
+            "create mask" = "0644";
+            "directory mask" = "0755";
+          })
+          filteredShares;
+      in
       sambaShares;
   };
 
@@ -166,22 +174,23 @@
     serviceConfig.Type = "oneshot";
     path = [ pkgs.kopia ];
 
-    serviceConfig.ExecStart = let
-      createBackupCommand = path: share:
-        if share.backup then
-          ''
-            # HOME is needed to create the cache
-            export HOME="/root"
-            echo BACKUP ${path}
-            kopia snapshot create /storage/${path}
-          ''
-        else
-          ''
-            echo SKIPPING ${path}
-          '';
+    serviceConfig.ExecStart =
+      let
+        createBackupCommand = path: share:
+          if share.backup then
+            ''
+              # HOME is needed to create the cache
+              export HOME="/root"
+              echo BACKUP ${path}
+              kopia snapshot create /storage/${path}
+            ''
+          else
+            ''
+              echo SKIPPING ${path}
+            '';
 
-      backupCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList createBackupCommand shares);
-    in
+        backupCommands = lib.concatStringsSep "\n" (lib.mapAttrsToList createBackupCommand shares);
+      in
       pkgs.writeShellScript "backup-script" backupCommands;
   };
 
@@ -221,9 +230,9 @@
     description = "Automatic connection to Tailscale";
 
     # make sure tailscale is running before trying to connect to tailscale
-    after = ["network-pre.target" "tailscale.service"];
-    wants = ["network-pre.target" "tailscale.service"];
-    wantedBy = ["multi-user.target"];
+    after = [ "network-pre.target" "tailscale.service" ];
+    wants = [ "network-pre.target" "tailscale.service" ];
+    wantedBy = [ "multi-user.target" ];
 
     # set this service as a oneshot job
     serviceConfig.Type = "oneshot";
