@@ -46,6 +46,8 @@
 
   services.cloud-init.enable = true;
   services.cloud-init.network.enable = true;
+  services.cloud-init.settings.preserve_hostname = true;
+
   services.qemuGuest.enable = true;
 
   services.openssh = {
