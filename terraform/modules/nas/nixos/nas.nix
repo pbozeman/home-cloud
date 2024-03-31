@@ -240,6 +240,9 @@
       fi
 
       # otherwise authenticate with tailscale
+      #
+      # FIXME: move to OAuth (I experienced the hang)
+      # see: https://github.com/tailscale/tailscale/issues/1728
       ${tailscale}/bin/tailscale up -authkey ${tailscaleKey} --advertise-routes=192.168.10.0/24
     '';
   };
