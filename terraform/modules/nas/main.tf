@@ -69,6 +69,8 @@ resource "null_resource" "deploy" {
     vm_id      = var.vm_ids[each.key]
   }
 
+  # need to use ips. The hostname might resolve to a tailscale
+  # ip, which won't work before the node is reprovisioned.
   provisioner "local-exec" {
     environment = {
     NIX_SSHOPTS = "-o StrictHostKeyChecking=no" }
@@ -82,8 +84,8 @@ resource "null_resource" "deploy" {
         "nixos-rebuild",
         "--fast",
         "--flake", "path:${local.flake_path}#${each.key}",
-        "--target-host", "root@${each.key}",
-        "--build-host", "root@${each.key}",
+        "--target-host", "root@${each.value.ip}",
+        "--build-host", "root@${each.value.ip}",
       ]
     )
 
