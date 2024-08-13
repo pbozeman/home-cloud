@@ -20,7 +20,7 @@ class BedroomButton(hass.Hass):
         if data.get("action") != "press":
             return
 
-        button = data.get("button_number")
+        button = data.get("leap_button_number")
         if button == 0:
             self.on()
         elif button == 2:
@@ -28,7 +28,7 @@ class BedroomButton(hass.Hass):
 
     def on(self):
         self.log("on")
-        self.turn_on(self.goodnight)
+        self.turn_on("scene.goodnight")
 
     def off(self):
         self.log("off")

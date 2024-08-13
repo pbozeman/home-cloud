@@ -80,6 +80,25 @@ data:
             state: "on"
             brightness: 75
 
+      - name: goodnight
+        icon: "mdi:lightbulb-night"
+        entities:
+          light.ames_light:
+            state: "off"
+          light.ram_light:
+            state: "off"
+          light.main_bedroom_ceiling_lights:
+            state: "on"
+            brightness: 75
+          light.hallway_main_lights:
+            state: "off"
+          light.kitchen_ceiling_lights:
+            state: "off"
+          light.dining_room_chandelier:
+            state: "off"
+          light.nook_light:
+            state: "off"
+
     input_boolean:
       goodnight_mode:
         name: Goodnight Mode
