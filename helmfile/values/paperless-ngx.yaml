@@ -6,6 +6,11 @@ env:
   PAPERLESS_TASK_WORKERS: 6
   PAPERLESS_EMAIL_TASK_CRON: "*/1 * * * *"
 
+image:
+  repository: ghcr.io/paperless-ngx/paperless-ngx
+  pullPolicy: IfNotPresent
+  tag: 2.11.2
+
 resources:
   requests:
     cpu: 1000m
