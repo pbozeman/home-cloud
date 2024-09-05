@@ -27,10 +27,10 @@ locals {
   }
 
   wlans = {
-    (var.trusted_ssid) = { network = "Trusted", passphrase = var.trusted_passphrase },
-    (var.kids_ssid)    = { network = "Kids", passphrase = var.kids_passphrase },
-    (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase },
-    (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase },
+    (var.trusted_ssid) = { network = "Trusted", passphrase = var.trusted_passphrase, ap_group = data.unifi_ap_group.work.id },
+    (var.kids_ssid)    = { network = "Kids", passphrase = var.kids_passphrase, ap_group = data.unifi_ap_group.default.id },
+    (var.iot_ssid)     = { network = "IoT", passphrase = var.iot_passphrase, ap_group = data.unifi_ap_group.default.id },
+    (var.guest_ssid)   = { network = "Guest", passphrase = var.guest_passphrase, ap_group = data.unifi_ap_group.default.id },
   }
 
   # the 1.1.1.1 is a hack to provide at least 1 element in the array. Unifi
@@ -49,6 +49,15 @@ locals {
 }
 
 data "unifi_ap_group" "default" {
+}
+
+// FIXME: these can't be created programatically, but this is needed
+// a work around in the studio until we have a proper uap
+// installation. Remove this once the studio has a wired uap
+// on the ceiling and the workbench switch isn't using a hacked
+// mesh uplink
+data "unifi_ap_group" "work" {
+  name = "work"
 }
 
 data "unifi_user_group" "default" {
@@ -134,7 +143,7 @@ resource "unifi_wlan" "wlan" {
   wpa3_transition = true
   pmf_mode        = "optional"
 
-  ap_group_ids  = [data.unifi_ap_group.default.id]
+  ap_group_ids  = [each.value.ap_group]
   user_group_id = data.unifi_user_group.default.id
 }
 
