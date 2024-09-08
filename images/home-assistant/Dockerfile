@@ -1,4 +1,4 @@
-FROM homeassistant/home-assistant:2023.12
+FROM homeassistant/home-assistant:2024.9
 
 COPY injected /injected
 
