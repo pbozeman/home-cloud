@@ -31,6 +31,12 @@ kitchen_motion_light:
   sensors: [binary_sensor.entry_occupancy, binary_sensor.kitchen_occupancy]
   delay_sec: 900 # 15m
 
+office_shades:
+  module: office-shades
+  class: OfficeShades
+  button: sensor.office_button_action
+  shades: [cover.office_left_blind, cover.office_right_blind]
+
 tv_time:
   module: tv-time
   class: TvTime
