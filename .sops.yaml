@@ -2,6 +2,8 @@ keys:
   - &pbozeman-dev age1mz9l2esa3xvvpzpf8dgccmh3v9573gjpyhfc6hspxrr86mg3rgzq589yhy
   - &pbozeman-mba age197v79pan9he4xqku2z5uyz56n6628rrc739vjzzhz7xp2hukqvusrm7x26
   - &pbozeman-fw age1f8tzahcl0gfugsz2earwar3ga2rtqlgm9lrpc790ju06gzs633rqgn0366
+  - &pbozeman-mini age12rh8n3qgq5k9jwwhhvrpmh4daahtjh3q28nm4pn5rwryvr4spg4qmadxxn
+
 creation_rules:
   - path_regex: helmfile/secrets/*
     key_groups:
@@ -9,9 +11,11 @@ creation_rules:
           - *pbozeman-dev
           - *pbozeman-mba
           - *pbozeman-fw
+          - *pbozeman-mini
   - path_regex: terraform/secret.tfvars
     key_groups:
       - age:
           - *pbozeman-dev
           - *pbozeman-mba
           - *pbozeman-fw
+          - *pbozeman-mini
