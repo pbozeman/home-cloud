@@ -1,12 +1,14 @@
-{ config,
-  lib,
-  pkgs,
-  modulesPath,
-  hostname,
-  is_first_host,
-  first_host,
-  k3s_token,
-  ... }: {
+{ config
+, lib
+, pkgs
+, modulesPath
+, hostname
+, is_first_host
+, first_host
+, k3s_token
+, ...
+}: {
+  system.stateVersion = "24.11";
 
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
 
@@ -20,12 +22,12 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  fileSystems."/" = { 
+  fileSystems."/" = {
     device = "/dev/vda3";
     fsType = "ext4";
   };
 
-  fileSystems."/boot" = { 
+  fileSystems."/boot" = {
     device = "/dev/vda2";
     fsType = "vfat";
   };
@@ -36,7 +38,7 @@
     autoFormat = true;
   };
 
-  swapDevices = [];
+  swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -57,7 +59,7 @@
 
   services.openiscsi.enable = true;
   services.openiscsi.name = "iqn.2023-21.local:${hostname}";
-  
+
   # add the following flags to test failover.  A properly designed
   # service shouldn't be a singleton, and the defaults are fine in
   # such cases, but things like homeassistant will need to be killed
@@ -77,7 +79,9 @@
     extraFlags =
       "--disable=servicelb " +
       "--disable=traefik " +
-      "--disable=local-storage";
+      "--disable=local-storage" +
+      "--tls-san=${hostname} " +
+      "--tls-san=k3s.blinkies.io";
   };
 
   services.avahi.enable = true;
