@@ -23,13 +23,13 @@ lamps_follow_dining_room_on:
   follower: light.common_lights
   ignore_off: True
 
-kitchen_motion_light:
-  module: motion-light
-  class: MotionLight
-  entity: light.kitchen_ceiling_lights
-  night_mode_entity: scene.kitchen_night
-  sensors: [binary_sensor.entry_occupancy, binary_sensor.kitchen_occupancy]
-  delay_sec: 900 # 15m
+# kitchen_motion_light:
+#   module: motion-light
+#   class: MotionLight
+#   entity: light.kitchen_ceiling_lights
+#   night_mode_entity: scene.kitchen_night
+#   sensors: [binary_sensor.entry_occupancy, binary_sensor.kitchen_occupancy]
+#   delay_sec: 900 # 15m
 
 office_shades:
   module: office-shades
